@@ -1,0 +1,4 @@
+checker_user: pychecker
+py_checker_venv_path: "{{ checking_env_path }}"
+worker_user: "{{ worker_username }}"
+

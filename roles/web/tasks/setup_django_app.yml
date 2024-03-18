@@ -10,7 +10,7 @@
 - name: Run the Django syncdb command
   community.general.django_manage:
     command: syncdb
-    app_path: "{{ project_path }}"
+    app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
   environment: "{{ django_environment }}"
@@ -20,7 +20,7 @@
 - name: Run Django database migrations
   community.general.django_manage:
     command: migrate
-    app_path: "{{ project_path }}"
+    app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
   environment: "{{ django_environment }}"
@@ -30,10 +30,11 @@
 - name: Run Django collectstatic
   community.general.django_manage:
     command: collectstatic
-    app_path: "{{ project_path }}"
+    app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
   environment: "{{ django_environment }}"
   when: run_django_collectstatic is defined and run_django_collectstatic
   notify: Restart application
   tags: django.collectstatic
+

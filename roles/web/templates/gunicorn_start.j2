@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="{{ application_name }}"
-DJANGODIR="{{ project_path }}"
+DJANGODIR="{{ project_path }}/webapp"
 SOCKFILE={{ virtualenv_path }}/run/gunicorn.sock
 USER={{ gunicorn_user }}
 GROUP={{ gunicorn_group }}

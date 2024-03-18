@@ -4,6 +4,10 @@
   when: create_swap_file
   tags: swap
 
+- name: Run apt update via shell # Until https://github.com/ansible/ansible/issues/28991
+  shell: apt update
+  become: yes
+
 - name: Install security updates
   ansible.builtin.apt: default_release={{ ansible_distribution_release }}-security
        update_cache={{ update_apt_cache }}

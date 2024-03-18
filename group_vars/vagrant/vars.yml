@@ -1,9 +1,9 @@
 ---
 
-git_repo: https://github.com/YPCrumble/django-default-project
+git_repo: https://github.com/lovelace-dev-org/lovelace
 
-project_name: django_default_project
-application_name: django_default_project
+project_name: lovelace
+application_name: lovelace
 
 # Note that this PPA doesn't guarantee timely updates in case of security issues.
 # Simply remove these two vars below if you prefer to use the official PPA and
@@ -11,12 +11,12 @@ application_name: django_default_project
 #
 # More info here: https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes
 enable_deadsnakes_ppa: true
-virtualenv_python_version: python3.9
+virtualenv_python_version: python3.11
 
 
 # Git settings.
 setup_git_repo: true
-git_branch: main
+git_branch: ansible-deploy
 
 
 # Security settings.
@@ -26,7 +26,9 @@ sudo_user_password: $6$rounds=656000$ca2RWJgtEqDVpOp9$0S0N3GHjOIO1PwRZ0vDyr0Z5Pi
 # Database settings.
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
-db_password: password
+db_password: hemuli
+db_host: localhost
+db_port: 5432
 
 
 # Gunicorn settings. For the number of workers, a good rule to follow is
@@ -56,17 +58,43 @@ celery_num_workers: 2
 use_celery_beat: false
 
 
-# Application settings.
-django_settings_file: "{{ application_name }}.settings.local"
-django_secret_key: "akr2icmg1n8%z^3fe3c+)5d0(t^cy-2_25rrl35a7@!scna^1#"
+result_redis_host: localhost
+result_redis_port: 6379
+result_redis_db: 0
+cache_redis: redis://127.0.0.1:6379/1
 
-broker_url: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+
+# Application settings.
+django_settings_file: "{{ application_name }}.settings.dev"
+django_secret_key: "akr2icmg1n8%z^3fe3c+)5d0(t^cy-2_25rrl35a7@!scna^1#"
+django_superuser_name: root
+django_superuser_pass: insecure
+django_superuser_mail: root@loc.al
+
+celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
 
 requirements_file: "{{ project_path }}/requirements.txt"
 
 run_django_db_migrations: true
 run_django_collectstatic: true
 
+
+default_lang: en
+lovelace_main_host: lovelace.local
+lovelace_main_addr: 127.0.0.1
+lovelace_private_storage: "{{ project_path }}/upload"
+lovelace_pg_passfile: "{{ project_path }}/.lovelace_pgpass"
+lovelace_pg_servicefile: "{{ project_path }}/.pg_service.conf"
+
+checking_env_path: /checkers/python
+worker_username: worker
+sandbox_username: peon
+
+# content_import_list:
+# - src_folder:
+#   filename:
+#   group: DefaultGroup
+#   responsible: "{{ django_superuser_name }}"
 
 # Nginx settings.
 ssl_crt: |

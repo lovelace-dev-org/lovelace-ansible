@@ -16,7 +16,7 @@ virtualenv_python_version: python3.11
 
 # Git settings.
 setup_git_repo: true
-git_branch: development
+git_branch: ansible-deploy
 
 
 # Security settings.
@@ -26,7 +26,10 @@ sudo_user_password: $6$rounds=656000$ca2RWJgtEqDVpOp9$0S0N3GHjOIO1PwRZ0vDyr0Z5Pi
 # Database settings.
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
-db_password: password
+db_password: hemuli
+db_host: localhost
+db_port: 5432
+
 
 
 # Gunicorn settings. For the number of workers, a good rule to follow is
@@ -56,16 +59,36 @@ celery_num_workers: 2
 use_celery_beat: false
 
 
+# Redis settings
+result_redis_host: localhost
+result_redis_port: 6379
+result_redis_db: 0
+cache_redis: redis://127.0.0.1:6379/1
+
+
+
 # Application settings.
-django_settings_file: "{{ application_name }}.settings.development"
+django_settings_file: "{{ application_name }}.settings.dev"
 django_secret_key: "akr2icmg1n8%z^3fe3c+)5d0(t^cy-2_25rrl35a7@!scna^1#"
 
-broker_url: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
 
 requirements_file: "{{ project_path }}/requirements.txt"
 
 run_django_db_migrations: true
 run_django_collectstatic: true
+
+# Lovelace specific
+
+default_lang: en
+lovelace_hostname: localhost
+lovelace_hostaddr: 127.0.0.1
+lovelace_private_storage: "{{ project_path }}/upload"
+lovelace_pg_passfile: "{{ project_path }}/.lovelace_pgpass"
+lovelace_pg_servicefile: "{{ project_path }}/.pg_service.conf"
+
+
+
 
 
 # Nginx settings.

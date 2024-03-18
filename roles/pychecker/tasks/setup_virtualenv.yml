@@ -1,0 +1,24 @@
+---
+
+- name: Install virtualenv
+  ansible.builtin.pip:
+    name: virtualenv
+    version: 20.24.6
+  tags: packages
+
+- name: Ensure no existing virtualenv exists
+  ansible.builtin.file:
+    state: absent
+    path: "{{ py_checker_venv_path }}/"
+  when: recreate_virtualenv
+
+- name: Create the virtualenv
+  ansible.builtin.command: virtualenv -p {{ virtualenv_python_version }} {{ py_checker_venv_path }}
+           creates={{ py_checker_venv_path }}/bin/activate
+
+- name: Ensure that the application file permissions are set properly
+  ansible.builtin.file: path={{ py_checker_venv_path }}
+        recurse=yes
+        owner={{ worker_user }}
+        state=directory
+  changed_when: false

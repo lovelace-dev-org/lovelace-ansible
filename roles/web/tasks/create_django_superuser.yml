@@ -1,0 +1,11 @@
+---
+
+- name: Create superuser
+  community.general.django_manage:
+    command: "createsuperuser --no-input"
+    app_path: "{{ project_path }}/webapp"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: "{{ django_settings_file }}"
+  environment: "{{ django_environment }}"
+  tags: [lovelace.initial, never]
+

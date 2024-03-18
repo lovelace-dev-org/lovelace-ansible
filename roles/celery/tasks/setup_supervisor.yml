@@ -50,11 +50,13 @@
   ansible.builtin.template: src=supervisor_{{ celery_beat_application_name }}.conf.j2
             dest=/etc/supervisor/conf.d/{{ celery_beat_application_name }}.conf
             mode=0644
+  when: use_celery_beat is defined and use_celery_beat
 
 - name: Check for an existing celery_beat logfile
   ansible.builtin.stat:
     path: "{{ celery_beat_log_file }}"
   register: b
+  when: use_celery_beat is defined and use_celery_beat
 
 - name: Create (or retain) the log file for {{ celery_beat_application_name }}
   # Removing until https://github.com/ansible/ansible/issues/45530 gets resolved.
@@ -69,6 +71,8 @@
     group: "{{ celery_group }}"
     state: '{{ "file" if b.stat.exists else "touch" }}'
     mode: "0644"
+  when: use_celery_beat is defined and use_celery_beat
 
 - name: Re-read the Supervisor celery_beat config files
   community.general.supervisorctl: name={{ celery_beat_application_name }} state=present
+  when: use_celery_beat is defined and use_celery_beat

@@ -1,0 +1,25 @@
+- name: Setup the Git repo
+  become_user: "{{ worker_user }}"
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/enkwolf/PySenpai-2.git
+    version: master
+    dest: "{{ py_checker_venv_path }}/PySenpai-2"
+    accept_hostkey: true
+  tags: git
+
+- name: Delete all .pyc files
+  ansible.builtin.command: find . -name '*.pyc' -delete
+  args:
+    chdir: "{{ py_checker_venv_path }}"
+  tags: git
+  changed_when: false
+
+- name: Install with pip
+  become_user: "{{ worker_user }}"
+  become: true
+  ansible.builtin.pip:
+    virtualenv: "{{ py_checker_venv_path }}"
+    chdir: "{{ py_checker_venv_path }}/PySenpai-2"
+    name: .
+

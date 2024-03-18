@@ -1,0 +1,8 @@
+---
+
+- name: Create the worker process user
+  ansible.builtin.user: name={{ worker_user }} state=present
+
+- name: Create the restricted sandbox user
+  ansible.builtin.user: name={{ sandbox_user }} state=present
+
