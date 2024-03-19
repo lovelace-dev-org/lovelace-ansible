@@ -45,7 +45,7 @@ Requirements:
 Tested on Ubuntu 22.04
 
 This option will install Lovelace into a virtual machine managed by Vagrant. Configuration is
-stored in `group_vars/vagrant/vars.yml`. If you don't have any special requirements you can simply
+stored in `group_vars/development/vars.yml`. If you don't have any special requirements you can simply
 use the provided settings and boot up a demo installation from the root folder of this repo with
 
 ```
