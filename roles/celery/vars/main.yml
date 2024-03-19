@@ -1,8 +1,8 @@
 ---
 
-server_root_dir: /webapps
+server_root_dir: /opt
 
-virtualenv_path: "/webapps/{{ application_name }}"
+virtualenv_path: "/opt/{{ application_name }}"
 project_path: "{{ virtualenv_path }}/{{ project_name }}"
 
 celery_user: "{{ application_name }}"

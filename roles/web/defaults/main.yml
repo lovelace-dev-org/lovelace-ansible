@@ -7,7 +7,7 @@ virtualenv_python_version: "{{ base_python_package }}"
 
 
 # Application settings.
-virtualenv_path: "/webapps/{{ application_name }}"
+virtualenv_path: "/opt/{{ application_name }}"
 project_path: "{{ virtualenv_path }}/{{ project_name }}"
 application_log_dir: "{{ virtualenv_path }}/logs"
 application_log_file: "{{ application_log_dir }}/gunicorn_supervisor.log"

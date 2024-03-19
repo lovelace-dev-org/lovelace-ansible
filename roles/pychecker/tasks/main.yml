@@ -1,15 +1,15 @@
 ---
 
 - ansible.builtin.import_tasks: setup_virtualenv.yml
-  tags: [pysenpai, virtualenv]
+  tags: [pysenpai, never]
 
 - ansible.builtin.import_tasks: setup_pysenpai.yml
-  tags: pysenpai
+  tags: [pysenpai, never]
 
 - ansible.builtin.import_tasks: setup_pysenpai_c.yml
-  tags: pysenpai
+  tags: [pysenpai, never]
   when: include_pysenpai_c is defined and include_pysenpai_c
 
 - ansible.builtin.import_tasks: setup_pysenpai_flask.yml
-  tags: pysenpai
+  tags: [pysenpai, never]
   when: include_pysenpai_flask is defined and include_pysenpai_flask

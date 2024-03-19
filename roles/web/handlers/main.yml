@@ -2,3 +2,4 @@
 
 - name: Restart application
   community.general.supervisorctl: name={{ application_name }} state=restarted
+  when: run_manually is not defined or run_manually is false

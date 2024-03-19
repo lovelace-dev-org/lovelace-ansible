@@ -24,6 +24,15 @@ combination with Lovelace to check Python and C exercises.
 Current installation options are:
 - Vagrant for local testing and demo
 
+## Ansible Galaxy Roles
+
+Install the Redis role
+
+```
+ansible-galaxy install geerlingguy.redis
+```
+
+
 ## Installing Lovelace
 
 ### Demo Installation with Vagrant
@@ -50,10 +59,43 @@ ANSIBLE_ARGS="--tags=optionaltag" vagrant provision
 ```
 
 
+### Development Installation for Localhost
 
-### Development Installation
+This installation method installs all the requirements and runs them, but does not run Lovelace itself
+or the Celery workers. Running them manually gives more direct access to debug information. If you want to run
+them automatically with Supervisor, you can remove the `run_manually` variable from `local.yml` (or set it to false).
 
-TBD
+Be aware that this creates a lot of changes on your local computer. Therefore creating a separate virtual machine for development is recommended. The user executing the command must be in sudoers.
+
+```
+ansible-playbook -i hosts.yml local.yml
+```
+
+This installation creates two virtual envs `/opt/lovelace/` and `/checkers/python/`, and clones the Lovelace
+repository into `/opt/lovelace/lovelace/`. Ownership of the repository is transferred from the lovelace user
+to the user running the playbook to prevent ownership issues when using git.
+
+In order to be able to run Lovelace from the command line manually, you need to activate the virtualenv, and export the environment variables that are needed for configuration.
+
+```
+source /opt/lovelace/bin/activate
+source /opt/lovelace/bin/postactivate
+```
+
+After this you can use Django's manage
+
+```
+cd /opt/lovelace/lovelace/webapp
+python manage.py runserver
+```
+
+and manually start workers with Celery (need to run as root for demotion to work)
+
+```
+cd /opt/lovelace/lovelace/webapp
+celery -A lovelace worker -Q default --loglevel=info -n checker1@%h
+```
+
 
 ### Production Installation into Multiple Servers
 
@@ -71,13 +113,6 @@ Some preparations should only be run once after installation. In order to do so,
 with `lovelace.initial` tag. Currently this does the following:
 
 - creates a superuser with credentials provided in the configuration
-
-### Installing Checking Environment
-
-The checking environment is not installed by default because it's not exactly a component of
-Lovelace. In order to install it you can run provision with the `pysenpai` tag. This creates
-a virtualenv for checking, and installs PySenpai into the virtualenv with all its optional
-components. This should only be ran for servers that will act as task workers.
 
 ### Importing Content
 

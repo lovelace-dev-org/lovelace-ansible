@@ -1,13 +1,12 @@
 ---
 
-- name: Create application virtual machine via vagrant
-  hosts: all
+- name: Create a local development environment
   become: true
-  become_user: root
-  remote_user: vagrant
+  hosts: development
   vars:
     update_apt_cache: true
-    hostname: lovelace.local
+    hostname: localhost
+    run_manually: true
   vars_files:
     - group_vars/development/vars.yml
   module_defaults:
@@ -21,7 +20,7 @@
     - rabbitmq
     - web
     - celery
-    - nginx
     - checker
     - pychecker
     - geerlingguy.redis
+    - local
