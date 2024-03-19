@@ -61,6 +61,9 @@ ANSIBLE_ARGS="--tags=optionaltag" vagrant provision
 
 ### Development Installation for Localhost
 
+Requirements:
+- [Ansible][ansible-installation_guide]
+
 This installation method installs all the requirements and runs them, but does not run Lovelace itself
 or the Celery workers. Running them manually gives more direct access to debug information. If you want to run
 them automatically with Supervisor, you can remove the `run_manually` variable from `local.yml` (or set it to false).
