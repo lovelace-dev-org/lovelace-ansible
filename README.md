@@ -62,6 +62,7 @@ ANSIBLE_ARGS="--tags=optionaltag" vagrant provision
 ### Development Installation for Localhost
 
 Requirements:
+- Ubuntu (or compatible OS that uses apt for installations)
 - [Ansible][ansible-installation_guide]
 
 This installation method installs all the requirements and runs them, but does not run Lovelace itself
