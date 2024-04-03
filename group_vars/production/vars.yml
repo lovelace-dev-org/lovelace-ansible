@@ -25,10 +25,15 @@ db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
 db_password: "{{ vault_db_password }}"                         # vault
 db_host: "{{ groups.postgres.0 }}"                             # read from inventory
-db_port: "{{ hostvars[groups.postgres.0].port }}"              # read from inventory
+{% if hostvars[groups.postgres.0].port is not none %}
+  db_port: "{{ hostvars[groups.postgres.0].port }}"              # read from inventory or use default
+{% endif %}
 
 # RabbitMQ settings.
 rabbitmq_server_name: "{{ groups.rabbitmq.0 }}"        # read from inventory
+{% if hostvars[groups.rabbitmq.0].port is not none %}
+  rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port }}"
+{% endif %}
 
 rabbitmq_admin_user: "{{ vault_rabbitmq_admin_user }}"          # vault
 rabbitmq_admin_password: "{{ vault_rabbitmq_admin_password }}"  # vault
@@ -39,10 +44,19 @@ rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     #
 
 
 result_redis_host: "{{ groups.result_redis.0 }}"                # read from inventory
-result_redis_port: "{{ hostvars[groups.result_redis.0].port }}"                     # read from inventory
+{% if hostvars[groups.result_redis.0].port is not none %}
+  result_redis_port: "{{ hostvars[groups.result_redis.0].port }}"                     # read from inventory
+{% else %}
+  result_redis_port: 6379
+{% endif %}
+
 result_redis_db: "{{ hostvars[groups.result_redis.0].result_db }}"                          # host variable
 cache_redis_host: "{{ groups.cache_redis.0 }}"                # read from inventory
-cache_redis_port: "{{ hostvars[groups.cache_redis.0].port }}"                     # read from inventory
+{% if hostvars[groups.cache_redis.0].port is not none %}
+  cache_redis_port: "{{ hostvars[groups.cache_redis.0].port }}"                     # read from inventory
+{% else %}
+  cache_redis_port: 6379
+{% endif %}
 cache_redis_db: "{{ hostvars[groups.cache_redis.0].cache_db }}"                          # host variable
 
 cache_redis: "redis://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
@@ -55,7 +69,7 @@ django_superuser_name: "{{ vault_django_superuser_name }}"                      
 django_superuser_pass: "{{ vault_django_superuser_pass }}"                                             # vault
 django_superuser_mail: "{{ vault_django_superuser_mail }}"                                          # vault
 
-celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 
 requirements_file: "{{ project_path }}/requirements.txt"
 
@@ -66,64 +80,13 @@ run_django_collectstatic: true
 default_lang: en
 
 
-# content_import_list:
-# - src_folder:
-#   filename:
-#   group: DefaultGroup
-#   responsible: "{{ django_superuser_name }}"
+content_import_list:
+- src_folder: ./content
+  filename: dev-first-instance_export.zip
+  group: DefaultGroup
+  responsible: "{{ django_superuser_name }}"
 
 # Nginx settings.
-ssl_crt: |
-  -----BEGIN CERTIFICATE-----
-  MIIDQjCCAiqgAwIBAgIBADANBgkqhkiG9w0BAQsFADAcMRowGAYDVQQDDBFteS1j
-  b29sLWFwcC5sb2NhbDAiGA8xOTcwMDEwMTAwMDAwMFoYDzk5OTkxMjMxMjM1OTU5
-  WjAcMRowGAYDVQQDDBFteS1jb29sLWFwcC5sb2NhbDCCASIwDQYJKoZIhvcNAQEB
-  BQADggEPADCCAQoCggEBALk8r6YMOYgu7xxq/XKQmtclVt603P/NT1qjDy95Sple
-  CMx3e/udECjhQkBOp34WEvo1TP93ZPA0IGmk3aNQVRfZE/6dUkBNmhOABR3zylz9
-  TPjBQaKiurro3o57OLCLWYOco+kE8kwTTh5Gl3gjm2KQJ6fh6JKk+TZq6/7sz2XO
-  4zWeNXoTNpi95ye2YJeNJ0I+FKhS7F5pRuIOgyhCopUSKSQpS3UZupcnYHVYthwK
-  ROGnZAznCF12OvO2PyxaDxa4Kc7Vr/ztP6CYLleyx7bY0vW+i84xfJO61qgk+Jrh
-  8tX2HCVyyDmlK1hK7vRUHoKacCKOrUI6GbstPZSzs7UCAwEAAaOBijCBhzAJBgNV
-  HRMEAjAAMB0GA1UdDgQWBBRtiQzxkQr7kZsTDUHHsMcGpsnobTAfBgNVHSMEGDAW
-  gBRtiQzxkQr7kZsTDUHHsMcGpsnobTAcBgNVHREEFTATghFteS1jb29sLWFwcC5s
-  b2NhbDAcBgNVHRIEFTATghFteS1jb29sLWFwcC5sb2NhbDANBgkqhkiG9w0BAQsF
-  AAOCAQEADEysIopo/TFj9zL5FpDLr/M71QPu7ZG10ncyIDp8wA8BxwLB2v2qcnfn
-  c4LoAa5Nw9A+WTSJtlEOMBWQCTIALx5dZSfYTcb/p/LIoprmrWx4L0C3TvRH3Vpx
-  INRxt2ynucNqNLKjfmvaZj5Ry1pJw8PE6AD7mWd1fpKUv3ci1cGY9hoCxMMIs8LJ
-  403V27BGsiK3bsUZuU+MWbcwfef8EqxFCjCvpko2qvrnJZ0AP5eDlDjdFgEeFy0c
-  kRKJS02KMbypFWVFMC9ePAWizLMmhj4NHFLzSP2l8WQ4F3A4Ja5QoxTUuIUUibnC
-  A/Bp6E0Njdy8AmCss8vS4GWYxTO4aA==
-  -----END CERTIFICATE-----
+nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
+nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
 
-# This key is for demo purposes only. If you're committing your keys
-# to your git repo, you'd probably want it encrypted. You can use
-# ansible-vault to do this.
-ssl_key: |
-  -----BEGIN PRIVATE KEY-----
-  MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC5PK+mDDmILu8c
-  av1ykJrXJVbetNz/zU9aow8veUqZXgjMd3v7nRAo4UJATqd+FhL6NUz/d2TwNCBp
-  pN2jUFUX2RP+nVJATZoTgAUd88pc/Uz4wUGiorq66N6Oeziwi1mDnKPpBPJME04e
-  Rpd4I5tikCen4eiSpPk2auv+7M9lzuM1njV6EzaYvecntmCXjSdCPhSoUuxeaUbi
-  DoMoQqKVEikkKUt1GbqXJ2B1WLYcCkThp2QM5whddjrztj8sWg8WuCnO1a/87T+g
-  mC5Xsse22NL1vovOMXyTutaoJPia4fLV9hwlcsg5pStYSu70VB6CmnAijq1COhm7
-  LT2Us7O1AgMBAAECggEAHjQU9+A6aUgt2NZhKRMHDFmcRof7GQKjE8ZOrZD7ZvJ8
-  QMqivq4nemLwaIfqq5Zx1bZnLaiMHtaBCnjFYuGwXkkZB4UjajS9ELzpGK8tqefr
-  awwn5ZrfE6bw0w6oebDfEaSy3UXfNCRZsnoULJSxu2qB7M/bGj4oHIVmoZR/ZLwG
-  LRItoK0wB2Bok5bmF9mAfW9EkoCOwkQP6uEynJ7z1f03teGJhSWu8xfjJv7XkLxG
-  vIFbSSeGKZdEHK5fz5nHyr8RCkF5DNPagrs5gz0o1clDeG3VcQhCUgE1y8Ly8iSR
-  LvDhk6KcfTscvdvxXNKPYPtqpFZfnJTt4qVM5rGaAQKBgQDd94EiefLVPxei/gqB
-  cfhmtsDAdeQRqdJedg/PE4KDzlAqzOY/Bd4klVASwA0yxXepqf2ZRT1vhMkjFmSM
-  kproc+gzKFQxxUSmJ//Jl2csaR3+UTAiBiv3b5BuCptG9WaHxRwx/jwHyslANrHP
-  D+33ybLTOjlMbktrwIkqR1JzwQKBgQDVo31EYOQ7fDt4DYLRVHMoKJpErbwDH9jt
-  hqfloKrV+UfrAWtn4mMcrCb6LKWTiv5T52gPbV/sSM5+7U97W3goffJShCPKobd3
-  6vhn2rowPjQd3IkZEygUuw4xTOHWUl1MB6Z9zyUd3hM1/wlO1CiHtaCpnEVgX66b
-  yEF7IVXs9QKBgBIrscmVvBhS6udv7oI8Rz55VXwr6ni7szoCZjbofPW3TP7D+VFN
-  dKsAAicWy73NRoeAH/+NGINplmGl8qNDWSUQYADYG1Rbtsv3WEwzdcG/9TGdidgv
-  Myg1XNh1S9LaQgN5Ul6RVm643hLAp3uw7SUswNPj307vdIMkptXsMsbBAoGAdfuI
-  9ZdQ0+0i5oUHptUtl5L8x0rvFwaihWKlHHJjhjHZ3tX02/UxaSdFi0nW0ymilPGq
-  DUMJA3Od3ojuKSD1td8AUUO6hHBU4zv3nVs1Eel4XLlrWVaz/ubiyqU732GzNobP
-  EpGwXNNE5sAHAuq1y2Sp6qFryvJseonYZ8icLHUCgYBHSWGgjhOA7KyZdcTdmpu+
-  fGAwN2Coj2l+PKvQEJkX96IOboHDkd7N8mwyfjb30FcD1uVkEwjp55PpHmYph8xD
-  GhN+yDgmf5OjDia0mFhv1nA/Nh16rQZd2NV7qYx0npPabOfud/8imdgOFr78HCjS
-  MoqV6aeRY/7uwLiviaIUJg==
-  -----END PRIVATE KEY-----

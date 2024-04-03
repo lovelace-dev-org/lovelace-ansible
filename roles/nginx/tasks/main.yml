@@ -6,7 +6,7 @@
 
 - name: Copy the SSL certificate to the remote server
   ansible.builtin.copy:
-    content={{ ssl_crt }}
+    content={{ nginx_ssl_crt }}
     dest={{ nginx_ssl_dest_dir }}/{{ application_name }}.crt
     mode="0644"
   notify: Restart nginx
@@ -14,7 +14,7 @@
 
 - name: Copy the SSL private key to the remote server
   ansible.builtin.copy:
-    content={{ ssl_key }}
+    content={{ nginx_ssl_key }}
     dest={{ nginx_ssl_dest_dir }}/{{ application_name }}.key
     mode="0644"
   notify: Restart nginx

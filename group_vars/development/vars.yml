@@ -90,14 +90,14 @@ checking_env_path: /checkers/python
 worker_username: worker
 sandbox_username: peon
 
-# content_import_list:
-# - src_folder:
-#   filename:
-#   group: DefaultGroup
-#   responsible: "{{ django_superuser_name }}"
+content_import_list:
+- src_folder: ./content
+  filename: dev-first-instance_export.zip
+  group: DefaultGroup
+  responsible: "{{ django_superuser_name }}"
 
 # Nginx settings.
-ssl_crt: |
+nginx_ssl_crt: |
   -----BEGIN CERTIFICATE-----
   MIIDQjCCAiqgAwIBAgIBADANBgkqhkiG9w0BAQsFADAcMRowGAYDVQQDDBFteS1j
   b29sLWFwcC5sb2NhbDAiGA8xOTcwMDEwMTAwMDAwMFoYDzk5OTkxMjMxMjM1OTU5
@@ -122,7 +122,7 @@ ssl_crt: |
 # This key is for demo purposes only. If you're committing your keys
 # to your git repo, you'd probably want it encrypted. You can use
 # ansible-vault to do this.
-ssl_key: |
+nginx_ssl_key: |
   -----BEGIN PRIVATE KEY-----
   MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC5PK+mDDmILu8c
   av1ykJrXJVbetNz/zU9aow8veUqZXgjMd3v7nRAo4UJATqd+FhL6NUz/d2TwNCBp
