@@ -1,0 +1,6 @@
+---
+rabbitmq_server_name: "{{ inventory_hostname }}"
+rabbitmq_port: 5672
+rabbitmq_api_port: 15672
+rabbitmq_use_ssl: false
+rabbitmq_use_letsencrypt: false
