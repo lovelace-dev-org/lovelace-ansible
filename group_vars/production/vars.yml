@@ -25,15 +25,11 @@ db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
 db_password: "{{ vault_db_password }}"                         # vault
 db_host: "{{ groups.postgres.0 }}"                             # read from inventory
-{% if hostvars[groups.postgres.0].port is not none %}
-  db_port: "{{ hostvars[groups.postgres.0].port }}"              # read from inventory or use default
-{% endif %}
+db_port: "{{ hostvars[groups.postgres.0].port }}"              # read from inventory or use default
 
 # RabbitMQ settings.
 rabbitmq_server_name: "{{ groups.rabbitmq.0 }}"        # read from inventory
-{% if hostvars[groups.rabbitmq.0].port is not none %}
-  rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port }}"
-{% endif %}
+rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port }}"
 
 rabbitmq_admin_user: "{{ vault_rabbitmq_admin_user }}"          # vault
 rabbitmq_admin_password: "{{ vault_rabbitmq_admin_password }}"  # vault
@@ -44,19 +40,10 @@ rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     #
 
 
 result_redis_host: "{{ groups.result_redis.0 }}"                # read from inventory
-{% if hostvars[groups.result_redis.0].port is not none %}
-  result_redis_port: "{{ hostvars[groups.result_redis.0].port }}"                     # read from inventory
-{% else %}
-  result_redis_port: 6379
-{% endif %}
-
+result_redis_port: "{{ hostvars[groups.result_redis.0].port | default(6379) }}"                     # read from
 result_redis_db: "{{ hostvars[groups.result_redis.0].result_db }}"                          # host variable
 cache_redis_host: "{{ groups.cache_redis.0 }}"                # read from inventory
-{% if hostvars[groups.cache_redis.0].port is not none %}
-  cache_redis_port: "{{ hostvars[groups.cache_redis.0].port }}"                     # read from inventory
-{% else %}
-  cache_redis_port: 6379
-{% endif %}
+cache_redis_port: "{{ hostvars[groups.cache_redis.0].port | default(6379) }}"                     # read from inventory
 cache_redis_db: "{{ hostvars[groups.cache_redis.0].cache_db }}"                          # host variable
 
 cache_redis: "redis://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
