@@ -103,7 +103,7 @@ celery -A lovelace worker -Q default --loglevel=info -n checker1@%h
 
 ### Production Installation into Multiple Servers
 
-TBD
+See the prodocution installation document for details.
 
 
 ## Post-Installation Actions

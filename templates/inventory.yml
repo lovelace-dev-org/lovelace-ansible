@@ -1,0 +1,37 @@
+workers:
+  hosts:
+    workers.placehold.er:
+      celery_num_workers:
+rabbitmq:
+  hosts:
+    rabbitmq.placehold.er:
+      rabbitmq_use_ssl: false
+      port:
+result_redis:
+  hosts:
+    resultredis.placehold.er:
+      result_db: 1
+      port:
+cache_redis:
+  hosts:
+    cacheredis.placehold.er:
+      cache_db: 0
+      port:
+lovelace:
+  hosts:
+    lovelace.placehold.er:
+      gunicorn_num_workers: 2
+      gunicorn_max_requests: 0
+      gunicorn_timeout_seconds: 300
+dbservers:
+  hosts:
+    postgres.placehol.der:
+      port:
+production:
+  children:
+    workers:
+    rabbitmq:
+    result_redis:
+    cache_redis:
+    lovelace:
+    dbservers:

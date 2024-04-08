@@ -1,0 +1,11 @@
+vault_db_password:
+vault_rabbitmq_admin_user:
+vault_rabbitmq_admin_password:
+vault_rabbitmq_application_password:
+vault_django_secret_key:
+vault_django_superuser_name:
+vault_django_superuser_pass:
+vault_django_superuser_mail:
+vault_nginx_ssl: |
+
+vault_nginx_key: |

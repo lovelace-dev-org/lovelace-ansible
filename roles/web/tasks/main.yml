@@ -19,9 +19,5 @@
 
 - ansible.builtin.import_tasks: create_django_superuser.yml
 
-- ansible.builtin.import_tasks: setup_supervisor.yml
-  tags: supervisor
-  when: run_manually is not defined or run_manually is false
-
 - ansible.builtin.import_tasks: import_content.yml
   tags: [lovelace.import, never]

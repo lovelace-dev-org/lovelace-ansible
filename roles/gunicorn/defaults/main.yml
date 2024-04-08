@@ -1,0 +1,4 @@
+---
+application_name: lovelace
+gunicorn_user: "{{ application_name }}"
+gunicorn_group: webapps
