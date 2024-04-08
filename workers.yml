@@ -7,6 +7,9 @@
   remote_user: "{{ server_user }}"
   vars:
     update_apt_cache: true
+    run_django_syncdb: false
+    run_django_db_migrations: false
+    run_django_collectstatic: false
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
@@ -14,6 +17,6 @@
   roles:
     - base
     - web
-    - celery
     - checker
     - pychecker
+    - celery
