@@ -1,6 +1,6 @@
 ---
 
-- name: Provision Redis
+- name: Provision Workers
   hosts: workers
   become: true
   become_user: root

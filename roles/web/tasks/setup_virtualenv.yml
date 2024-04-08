@@ -36,18 +36,3 @@
     state: directory
   changed_when: false
 
-- name: Check for an existing application logfile
-  ansible.builtin.stat:
-    path: "{{ application_log_file }}"
-  register: p
-
-- name: Create the virtualenv postactivate script to set environment variables
-  ansible.builtin.template: src=virtualenv_postactivate.j2
-            dest={{ virtualenv_path }}/bin/postactivate
-            owner={{ gunicorn_user }}
-            group={{ gunicorn_group }}
-            mode=0640
-            backup=yes
-  notify: Restart application
-  tags: deploy
-

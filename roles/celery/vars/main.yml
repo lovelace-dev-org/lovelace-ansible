@@ -11,6 +11,7 @@ celery_group: webapps
 celery_application_name: celery
 celery_scripts_dir: "{{ virtualenv_path }}/scripts/celery"
 celery_template_file: "{{ celery_application_name }}_start.j2"
+restart_target: "{{ celery_application_name }}"
 
 celery_beat_application_name: celery_beat
 celery_beat_template_file: "{{ celery_beat_application_name }}_start.j2"
@@ -18,3 +19,25 @@ celery_beat_template_file: "{{ celery_beat_application_name }}_start.j2"
 celery_log_dir: "{{ virtualenv_path }}/logs"
 celery_log_file: "{{ celery_log_dir }}/{{ celery_application_name }}.log"
 celery_beat_log_file: "{{ celery_log_dir }}/{{ celery_beat_application_name }}.log"
+
+django_environment:
+  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
+  LOVELACE_HOSTNAME: localhost
+  LOVELACE_HOSTADDR: 127.0.0.1
+  LOVELACE_DEFAULT_LANG: "{{ default_lang }}"
+  LOVELACE_REDIS_HOST: "{{ result_redis_host }}"
+  LOVELACE_REDIS_PORT: "{{ result_redis_port }}"
+  LOVELACE_REDIS_RESULT_DB: "{{ result_redis_db }}"
+  LOVELACE_REDIS_CACHE: undefined
+  LOVELACE_CELERY_BROKER: "{{ celery_broker }}"
+  LOVELACE_SECRET_KEY: undefined
+  LOVELACE_PRIVATE_STORAGE: undefined
+  MEDIA_ROOT: "{{ nginx_media_dir }}"
+  STATIC_ROOT: "{{ nginx_static_dir }}"
+  LOVELACE_DB_NAME: undefined
+  LOVELACE_DB_USER: undefined
+  LOVELACE_DB_PASS: undefined
+  LOVELACE_DB_HOST: undefined
+  LOVELACE_DB_PORT: undefined
+  LOVELACE_CHECKER_ENV: ' {"PATH": "{{ checking_env_path }}/bin","VIRTUALENV": "{{ checking_env_path }}","LC_CTYPE": "en_US.UTF-8"} '
+

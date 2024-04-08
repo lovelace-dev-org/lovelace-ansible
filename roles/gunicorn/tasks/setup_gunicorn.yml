@@ -42,4 +42,13 @@
             dest={{ virtualenv_path }}/maintenance_off.html
             mode=0664
 
+- name: Create the virtualenv postactivate script to set environment variables
+  ansible.builtin.template: src=virtualenv_postactivate.j2
+            dest={{ virtualenv_path }}/bin/postactivate
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0640
+            backup=yes
+  tags: deploy
+
 

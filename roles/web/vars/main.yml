@@ -1,0 +1,15 @@
+---
+virtualenv_python_version: "{{ base_python_package }}"
+virtualenv_path: "/opt/{{ application_name }}"
+
+# Application settings.
+project_path: "{{ virtualenv_path }}/{{ project_name }}"
+application_log_dir: "{{ virtualenv_path }}/logs"
+requirements_file: "{{ project_path }}/requirements.txt"
+
+gunicorn_user: "{{ application_name }}"
+
+lovelace_main_host: "{{ inventory_hostname }}"
+lovelace_main_addr: 127.0.0.1
+
+
