@@ -24,7 +24,7 @@ gunicorn_group: webapps
 nginx_static_dir: "{{ virtualenv_path }}/static/"
 nginx_media_dir: "{{ virtualenv_path }}/media/"
 
-lovelace_main_host: "{{ hostname}}"
+lovelace_main_host: "{{ inventory_hostname }}"
 lovelace_main_addr: 127.0.0.1
 lovelace_private_storage: "{{ virtualenv_path }}/upload"
 lovelace_pg_passfile: "{{ virtualenv_path }}/.lovelace_pgpass"

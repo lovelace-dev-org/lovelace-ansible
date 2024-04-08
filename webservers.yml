@@ -1,7 +1,7 @@
 ---
 
 - name: Provision main server(s)
-  hosts: webservers
+  hosts: lovelace
   become: true
   become_user: root
   remote_user: "{{ server_user }}"

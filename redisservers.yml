@@ -1,10 +1,10 @@
 ---
 
 - name: Provision Redis
-  hosts: redis
+  hosts: cache_redis, result_redis
   become: true
   become_user: root
-  remote_user: "{{ server_user }}"
+  remote_user: "{{ server_user | default(ansible_user) }}"
   vars:
     update_apt_cache: true
   module_defaults:

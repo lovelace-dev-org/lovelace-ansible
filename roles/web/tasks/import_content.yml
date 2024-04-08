@@ -17,6 +17,8 @@
   with_items: "{{ content_import_list }}"
 
 - name: Import content to Lovelace
+  become_user: "{{ gunicorn_user }}"
+  become: true
   community.general.django_manage:
     command: "import_course --responsible={{ item.responsible }} --group={{ item.group }} {{ import_dir.path}}/{{ item.filename }}"
     app_path: "{{ project_path }}/webapp"

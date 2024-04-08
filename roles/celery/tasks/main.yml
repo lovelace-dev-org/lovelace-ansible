@@ -1,5 +1,8 @@
 ---
 
+- ansible.builtin.import_tasks: create_users_and_groups.yml
+  tags: celery
+
 - ansible.builtin.import_tasks: copy_scripts.yml
   tags: celery
 

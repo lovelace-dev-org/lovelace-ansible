@@ -1,0 +1,30 @@
+---
+
+gunicorn_user: "{{ application_name }}"
+gunicorn_group: webapps
+worker_username: worker
+sandbox_username: peon
+checking_env_path: /checkers/python
+use_celery_beat: false
+
+django_environment:
+  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
+  LOVELACE_HOSTNAME: localhost
+  LOVELACE_HOSTADDR: 127.0.0.1
+  LOVELACE_DEFAULT_LANG: "{{ default_lang }}"
+  LOVELACE_REDIS_HOST: "{{ result_redis_host }}"
+  LOVELACE_REDIS_PORT: "{{ result_redis_port }}"
+  LOVELACE_REDIS_RESULT_DB: "{{ result_redis_db }}"
+  LOVELACE_REDIS_CACHE: undefined
+  LOVELACE_CELERY_BROKER: "{{ celery_broker }}"
+  LOVELACE_SECRET_KEY: undefined
+  LOVELACE_PRIVATE_STORAGE: undefined
+  MEDIA_ROOT: "{{ nginx_media_dir }}"
+  STATIC_ROOT: "{{ nginx_static_dir }}"
+  LOVELACE_DB_NAME: undefined"
+  LOVELACE_DB_USER: undefined
+  LOVELACE_DB_PASS: undefined
+  LOVELACE_DB_HOST: undefined
+  LOVELACE_DB_PORT: undefined
+  LOVELACE_CHECKER_ENV: ' {"PATH": "{{ checking_env_path }}/bin","VIRTUALENV": "{{ checking_env_path }}","LC_CTYPE": "en_US.UTF-8"} '
+

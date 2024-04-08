@@ -24,12 +24,12 @@ git_branch: ansible-deploy
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
 db_password: "{{ vault_db_password }}"                         # vault
-db_host: "{{ groups.postgres.0 }}"                             # read from inventory
-db_port: "{{ hostvars[groups.postgres.0].port }}"              # read from inventory or use default
+db_host: "{{ groups.dbservers.0 }}"                             # read from inventory
+db_port: "{{ hostvars[groups.dbservers.0].port | default(5432) }}"              # read from inventory or use default
 
 # RabbitMQ settings.
 rabbitmq_server_name: "{{ groups.rabbitmq.0 }}"        # read from inventory
-rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port }}"
+rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port | default(5672) }}"
 
 rabbitmq_admin_user: "{{ vault_rabbitmq_admin_user }}"          # vault
 rabbitmq_admin_password: "{{ vault_rabbitmq_admin_password }}"  # vault
@@ -41,6 +41,7 @@ rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     #
 
 result_redis_host: "{{ groups.result_redis.0 }}"                # read from inventory
 result_redis_port: "{{ hostvars[groups.result_redis.0].port | default(6379) }}"                     # read from
+redis_bind_interface: "{{ inventory_hostname }}"
 result_redis_db: "{{ hostvars[groups.result_redis.0].result_db }}"                          # host variable
 cache_redis_host: "{{ groups.cache_redis.0 }}"                # read from inventory
 cache_redis_port: "{{ hostvars[groups.cache_redis.0].port | default(6379) }}"                     # read from inventory

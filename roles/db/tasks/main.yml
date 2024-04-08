@@ -79,3 +79,39 @@
   community.postgresql.postgresql_user: name={{ db_user }}
                    role_attr_flags=NOSUPERUSER,NOCREATEDB
                    state=present
+
+- name: Add server hostname to listen addresses
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_set:
+    db: "{{ db_name }}"
+    name: listen_addresses
+    value: "127.0.0.1, {{ inventory_hostname }}"
+  notify: Restart postgresql
+
+- name: Find out where pg_hba.conf is
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_query:
+    db: "{{ db_name }}"
+    query: "show hba_file;"
+  register: hba_query_result
+
+- name: Get IP address of main server
+  ansible.builtin.setup:
+    gather_subset: default_ipv4
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ groups['lovelace'] }}"
+
+- name: Allow access from Lovelace server
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_pg_hba:
+    dest: "{{ hba_query_result.query_result.0.hba_file }}"
+    contype: host
+    users: "{{ db_user }}"
+    databases: "{{ db_name }}"
+    method: scram-sha-256
+    source: "{{ hostvars[groups.lovelace.0]['ansible_default_ipv4']['address'] }}/32"
+  notify: Restart postgresql
