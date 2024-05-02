@@ -43,6 +43,9 @@ rabbitmq_application_user: "{{ application_name }}"
 rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     # vault
 
 redis_use_ssl: true
+rabbitmq_worker_user: "{{ application_name }}-worker"
+rabbitmq_worker_password: "{{ vault_rabbitmq_worker_password }}"
+
 result_redis_host: "{{ groups.result_redis.0 }}"                # read from inventory
 result_redis_port: "{{ hostvars[groups.result_redis.0].port | default(6379) }}"                     # read from
 redis_bind_interface: "{{ inventory_hostname }}"
@@ -76,6 +79,8 @@ django_superuser_pass: "{{ vault_django_superuser_pass }}"                      
 django_superuser_mail: "{{ vault_django_superuser_mail }}"                                          # vault
 
 celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
+worker_celery_broker: "amqp://{{ rabbitmq_worker_user }}:{{ rabbitmq_worker_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
+
 
 requirements_file: "{{ project_path }}/requirements.txt"
 

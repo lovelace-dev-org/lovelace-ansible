@@ -21,3 +21,12 @@
             group={{ celery_group }}
             mode=0755
   when: use_celery_beat is defined and use_celery_beat
+
+- name: Create the virtualenv postactivate script to set environment variables
+  ansible.builtin.template: src=virtualenv_postactivate.j2
+            dest={{ virtualenv_path }}/bin/postactivate
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0640
+            backup=yes
+  notify: Restart application

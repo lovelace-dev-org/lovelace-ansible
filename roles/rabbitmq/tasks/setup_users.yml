@@ -18,6 +18,16 @@
     write_priv: .*
     state: present
 
+- name: Create worker user
+  community.rabbitmq.rabbitmq_user:
+    user: "{{ rabbitmq_worker_user }}"
+    password: "{{ rabbitmq_worker_password }}"
+    vhost: "{{ rabbitmq_application_vhost }}"
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present
+
 - name: Ensure the default 'guest' user doesn't exist
   community.rabbitmq.rabbitmq_user:
     user: "guest"

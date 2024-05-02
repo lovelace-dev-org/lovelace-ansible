@@ -29,11 +29,11 @@ django_environment:
   LOVELACE_REDIS_PORT: "{{ result_redis_port }}"
   LOVELACE_REDIS_RESULT_DB: "{{ result_redis_db }}"
   LOVELACE_REDIS_CACHE: undefined
-  LOVELACE_CELERY_BROKER: "{{ celery_broker }}"
+  LOVELACE_CELERY_BROKER: "{{ worker_celery_broker }}"
   LOVELACE_SECRET_KEY: undefined
   LOVELACE_PRIVATE_STORAGE: undefined
-  MEDIA_ROOT: "{{ nginx_media_dir }}"
-  STATIC_ROOT: "{{ nginx_static_dir }}"
+  MEDIA_ROOT: undefined
+  STATIC_ROOT: undefined
   LOVELACE_DB_NAME: undefined
   LOVELACE_DB_USER: undefined
   LOVELACE_DB_PASS: undefined
