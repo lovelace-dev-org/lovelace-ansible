@@ -7,6 +7,8 @@
   remote_user: "{{ server_user }}"
   vars:
     update_apt_cache: true
+    ssl_key_usage: ["serverAuth"]
+    ssl_user: rabbitmq
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
@@ -14,3 +16,4 @@
   roles:
     - base
     - rabbitmq
+    - ca_signed

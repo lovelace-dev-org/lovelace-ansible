@@ -7,12 +7,15 @@
   remote_user: "{{ server_user }}"
   vars:
     update_apt_cache: true
+    ssl_key_usage: ["clientAuth"]
+    ssl_user: "{{ gunicorn_user }}"
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
 
   roles:
     - base
+    - ca_signed
     - web
     - gunicorn
     - nginx

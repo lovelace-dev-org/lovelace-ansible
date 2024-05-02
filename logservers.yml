@@ -1,19 +1,16 @@
 ---
 
-- name: Provision Redis
-  hosts: cache_redis, result_redis
+- name: Provision logservers
+  hosts: logservers
   become: true
   become_user: root
   remote_user: "{{ server_user | default(ansible_user) }}"
   vars:
     update_apt_cache: true
-    ssl_key_usage: ["serverAuth"]
-    ssl_user: redis
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
 
   roles:
     - base
-    - geerlingguy.redis
-    - ca_signed
+    - logserver

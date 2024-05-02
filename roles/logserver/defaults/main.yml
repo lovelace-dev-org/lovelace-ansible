@@ -1,0 +1,4 @@
+---
+syslog_conf_path: /etc/rsyslog.conf
+syslog_protocol: udp
+syslog_port: 514

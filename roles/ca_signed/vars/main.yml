@@ -1,0 +1,3 @@
+---
+ssl_key_path: "/etc/ssl/{{ inventory_hostname }}.key"
+ssl_crt_path: "/etc/ssl/{{ inventory_hostname }}.crt"

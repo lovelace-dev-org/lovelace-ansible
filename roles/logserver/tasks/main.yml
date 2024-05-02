@@ -1,0 +1,27 @@
+---
+- name: Enable remote connections
+  lineinfile:
+    path: "{{ syslog_conf_path }}"
+    regexp: "{{ item.match }}"
+    line: "{{ item.newline }}"
+  loop:
+    - match: '^#module\(load="{{ syslog_protocol }}"\)'
+      newline: 'module\(load="{{ syslog_protocol }}"\)'
+    - match: '^#input\(type="{{ syslog_protocol }}" port="514"\)'
+      newline: 'input\(type="{{ syslog_protocol }}" port="{{ syslog_port }}"\)'
+
+- name: Create template
+  blockinfile:
+    block: |
+      $template byhost,"/var/logs/%HOSTNAME%/%syslogseverity-text%.log"
+      *.* -?byhost
+  notify: Restart rsyslogd
+
+- name: Open firewall port
+  firewalld:
+    port: "{{ syslog_port }}/{{ syslog_protocol }}"
+    state: enabled
+    immediate: yes
+    permanent: yes
+  when: firewall_preconfigured is not defined or firewall_preconfigured is false
+

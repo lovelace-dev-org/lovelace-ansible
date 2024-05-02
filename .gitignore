@@ -11,3 +11,6 @@ vagrant_ansible_inventory_default
 
 # Python
 *.pyc
+
+#
+*.kate-swp

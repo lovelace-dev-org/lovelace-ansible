@@ -1,10 +1,15 @@
+{% if use_syslog %}
+[supervisord]
+logfile = syslog
+{% endif %}
+
 [program:{{ celery_application_name }}]
-command={{ celery_scripts_dir }}/{{ celery_application_name }}_start
+command = {{ celery_scripts_dir }}/{{ celery_application_name }}_start
 
-autostart=true
-autorestart=true
+autostart = true
+autorestart = true
 
-user=root
+user = root
 
-stdout_logfile={{ celery_log_file }}
+stdout_logfile = {% 'syslog' if use_syslog else celery_log_file %}
 redirect_stderr = true

@@ -25,13 +25,25 @@ lovelace:
       gunicorn_timeout_seconds: 300
 dbservers:
   hosts:
-    postgres.placehol.der:
+    postgres.placehold.er:
       port:
+ca_server:
+  hosts:
+    ca.placehold.er:
+logservers:
+  hosts:
+    logserver.placehold.er:
+mediaservers:
+  hosts:
+    mediaserver.placehold.er:
 production:
   children:
+    ca_server:
     workers:
     rabbitmq:
     result_redis:
     cache_redis:
     lovelace:
     dbservers:
+    logservers:
+    mediaservers:

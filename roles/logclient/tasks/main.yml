@@ -1,0 +1,9 @@
+---
+- name: Create remote.conf
+  template:
+    src: templates/remote.conf.j2
+    dest: "{{ remote_conf_path }}"
+    mode: "644"
+    owner: root
+    group: root
+

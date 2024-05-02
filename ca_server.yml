@@ -1,0 +1,14 @@
+---
+
+- name: Provision CA server
+  hosts: ca_server
+  become: true
+  become_user: root
+  remote_user: "{{ server_user }}"
+  module_defaults:
+    ansible.builtin.apt:
+      force_apt_get: true
+
+  roles:
+    - base
+    - ca

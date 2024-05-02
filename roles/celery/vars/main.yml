@@ -40,4 +40,9 @@ django_environment:
   LOVELACE_DB_HOST: undefined
   LOVELACE_DB_PORT: undefined
   LOVELACE_CHECKER_ENV: ' {"PATH": "{{ checking_env_path }}/bin","VIRTUALENV": "{{ checking_env_path }}","LC_CTYPE": "en_US.UTF-8"} '
+  LOVELACE_CELERY_USE_SSL: "{{ '1' if rabbitmq_use_ssl }}"
+  LOVELACE_CACHE_USE_SSL: "{{ '1' if redis_use_ssl }}"
+  LOVELACE_CLIENT_CA: "{{ ca_crt_path }}"
+  LOVELACE_CLIENT_CERT: "{{ ssl_crt_path }}"
+  LOVELACE_CLIENT_KEY: "{{ ssl_key_path }}"
 

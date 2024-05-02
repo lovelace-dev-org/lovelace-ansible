@@ -1,13 +1,13 @@
 ---
 
-- ansible.builtin.import_tasks: dbservers.yml
+- ansible.builtin.import_playbook: dbservers.yml
 
-- ansible.builtin.import_tasks: redisservers.yml
+- ansible.builtin.import_playbook: redisservers.yml
 
-- ansible.builtin.import_tasks: rabbitservers.yml
+- ansible.builtin.import_playbook: rabbitservers.yml
 
-- ansible.builtin.import_tasks: mediaservers.yml
+- ansible.builtin.import_playbook: mediaservers.yml
 
-- ansible.builtin.import_tasks: webservers.yml
+- ansible.builtin.import_playbook: webservers.yml
 
-- ansible.builtin.import_tasks: workers.yml
+- ansible.builtin.import_playbook: workers.yml

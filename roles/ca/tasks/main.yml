@@ -1,0 +1,12 @@
+---
+- name: Create CA private key
+  community.crypto.openssl_privatekey:
+    path: "{{ ca_key_path }}"
+    passphrase: "{{ ca_passphrase }}"
+    mode: "600"
+
+- name: Create CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ ca_crt_path }}"
+    privatekey_pat: "{{ ca_key_path }}"
+    provider: selfsigned

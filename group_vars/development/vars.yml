@@ -13,6 +13,7 @@ application_name: lovelace
 enable_deadsnakes_ppa: true
 virtualenv_python_version: python3.11
 
+use_syslog: false
 
 # Git settings.
 setup_git_repo: true
@@ -62,6 +63,7 @@ result_redis_host: localhost
 result_redis_port: 6379
 result_redis_db: 0
 cache_redis: redis://127.0.0.1:6379/1
+result_redis: redis://127.0.0.1:6379/0
 
 
 # Application settings.

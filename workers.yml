@@ -10,12 +10,15 @@
     run_django_syncdb: false
     run_django_db_migrations: false
     run_django_collectstatic: false
+    ssl_key_usage: ["clientAuth"]
+    ssl_user: "{{ celery_user }}"
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
 
   roles:
     - base
+    - ca_signed
     - web
     - checker
     - pychecker

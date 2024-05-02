@@ -80,6 +80,30 @@
                    role_attr_flags=NOSUPERUSER,NOCREATEDB
                    state=present
 
+- name: Set CA path
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_set:
+    name: ca_cert
+    value: "{{ ca_crt_path }}"
+  when: postgres_use_ssl is true
+
+- name: Set server certificate path
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_set:
+    name: ssl_cert
+    value: "{{ ssl_crt_path }}"
+  when: postgres_use_ssl is true
+
+- name: Set server key path
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_set:
+    name: ssl_key
+    value: "{{ ssl_key_path }}"
+  when: postgres_use_ssl is true
+
 - name: Add server hostname to listen addresses
   become: true
   become_user: postgres
@@ -109,9 +133,10 @@
   become_user: postgres
   community.postgresql.postgresql_pg_hba:
     dest: "{{ hba_query_result.query_result.0.hba_file }}"
-    contype: host
+    contype: "{{ 'hostssl' if postgres_use_ssl else 'host' }}"
     users: "{{ db_user }}"
     databases: "{{ db_name }}"
     method: scram-sha-256
     source: "{{ hostvars[groups.lovelace.0]['ansible_default_ipv4']['address'] }}/32"
+    options: "{{ 'clientcert=verify-full' if postgres_use_ssl else '' }}"
   notify: Restart postgresql

@@ -14,13 +14,16 @@ enable_deadsnakes_ppa: true
 virtualenv_python_version: python3.11
 
 
+use_syslog: true
+
 # Git settings.
 setup_git_repo: true
 git_branch: ansible-deploy
 
-
+ca_passphrase: "{{ vault_ca_passphrase }}"
 
 # Database settings.
+postgres_use_ssl: true
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
 db_password: "{{ vault_db_password }}"                         # vault
@@ -28,6 +31,7 @@ db_host: "{{ groups.dbservers.0 }}"                             # read from inve
 db_port: "{{ hostvars[groups.dbservers.0].port | default(5432) }}"              # read from inventory or use default
 
 # RabbitMQ settings.
+rabbitmq_use_ssl: true
 rabbitmq_server_name: "{{ groups.rabbitmq.0 }}"        # read from inventory
 rabbitmq_server_port: "{{ hostvars[groups.rabbitmq.0].port | default(5672) }}"
 
@@ -38,7 +42,7 @@ rabbitmq_application_vhost: "{{ application_name }}"
 rabbitmq_application_user: "{{ application_name }}"
 rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     # vault
 
-
+redis_use_ssl: true
 result_redis_host: "{{ groups.result_redis.0 }}"                # read from inventory
 result_redis_port: "{{ hostvars[groups.result_redis.0].port | default(6379) }}"                     # read from
 redis_bind_interface: "{{ inventory_hostname }}"
@@ -47,8 +51,22 @@ cache_redis_host: "{{ groups.cache_redis.0 }}"                # read from invent
 cache_redis_port: "{{ hostvars[groups.cache_redis.0].port | default(6379) }}"                     # read from inventory
 cache_redis_db: "{{ hostvars[groups.cache_redis.0].cache_db }}"                          # host variable
 
-cache_redis: "redis://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
+cache_redis: "redis{{ 's' if redis_use_ssl }}://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
+result_redis: "redis{{ 's' if redis_use_ssl }}://{{ result_redis_host }}:{{ result_redis_port }}/{{ result_redis_db }}"
 
+
+redis_extra_config_no_ssl: |
+  syslog-enabled yes
+
+redis_extra_config_ssl: |
+  syslog-enabled yes
+  port 0
+  tls-port {{ hostvars[inventory_hostname].port }}
+  tls-cert-file {{ ssl_crt_path }}
+  tls-key-file {{ ssl_key_path }}
+  tls-ca-cert-file {{ ca_crt_path }}
+
+redis_extra_config: "{{ redis_extra_config_ssl if redis_use_ssl is true else redis_extra_config_no_ssl }}"
 
 # Application settings.
 django_settings_file: "{{ application_name }}.settings.production"
