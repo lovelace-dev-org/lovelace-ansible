@@ -26,6 +26,7 @@ ca_passphrase: "{{ vault_ca_passphrase }}"
 syslog_address: "{{ groups.logservers.0 }}"
 
 # Database settings.
+remote_db: true
 postgres_use_ssl: true
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"

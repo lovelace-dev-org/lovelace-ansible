@@ -18,9 +18,10 @@
     - avahi
     - db
     - rabbitmq
-    - web
+    - geerlingguy.redis
+    - lovelace
     - celery
     - checker
+    - gunicorn
     - pychecker
-    - geerlingguy.redis
     - local

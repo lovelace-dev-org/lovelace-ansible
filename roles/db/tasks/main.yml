@@ -112,6 +112,7 @@
     name: listen_addresses
     value: "127.0.0.1, {{ inventory_hostname }}"
   notify: Restart postgresql
+  when: remote_db is true
 
 - name: Find out where pg_hba.conf is
   become: true
@@ -120,6 +121,7 @@
     db: "{{ db_name }}"
     query: "show hba_file;"
   register: hba_query_result
+  when: remote_db is true
 
 - name: Get IP address of main server
   ansible.builtin.setup:
@@ -127,6 +129,7 @@
   delegate_to: "{{ item }}"
   delegate_facts: true
   loop: "{{ groups['lovelace'] }}"
+  when: remote_db is true
 
 - name: Allow access from Lovelace server
   become: true
@@ -140,3 +143,4 @@
     source: "{{ hostvars[groups.lovelace.0]['ansible_default_ipv4']['address'] }}/32"
     options: "{{ 'clientcert=verify-ca' if postgres_use_ssl else '' }}"
   notify: Restart postgresql
+  when: remote_db is true

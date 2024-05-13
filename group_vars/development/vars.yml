@@ -25,6 +25,8 @@ sudo_user_password: $6$rounds=656000$ca2RWJgtEqDVpOp9$0S0N3GHjOIO1PwRZ0vDyr0Z5Pi
 
 
 # Database settings.
+remote_db: false
+postgres_use_ssl: false
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
 db_password: hemuli
@@ -45,6 +47,7 @@ gunicorn_timeout_seconds: 300
 
 # RabbitMQ settings.
 rabbitmq_server_name: "{{ inventory_hostname }}"
+rabbitmq_use_ssl: false
 
 rabbitmq_admin_user: admin
 rabbitmq_admin_password: password
@@ -52,13 +55,15 @@ rabbitmq_admin_password: password
 rabbitmq_application_vhost: "{{ application_name }}"
 rabbitmq_application_user: "{{ application_name }}"
 rabbitmq_application_password: password
-
+rabbitmq_worker_user: "{{ application_name }}-worker"
+rabbitmq_worker_password: password
+rabbitmq_server_port: 5672
 
 # Celery settings.
 celery_num_workers: 2
 use_celery_beat: false
 
-
+redis_use_ssl: false
 result_redis_host: localhost
 result_redis_port: 6379
 result_redis_db: 0
@@ -74,6 +79,7 @@ django_superuser_pass: insecure
 django_superuser_mail: root@loc.al
 
 celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+worker_celery_broker: "amqp://{{ rabbitmq_worker_user }}:{{ rabbitmq_worker_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 
 requirements_file: "{{ project_path }}/requirements.txt"
 

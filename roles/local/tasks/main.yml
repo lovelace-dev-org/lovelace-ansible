@@ -17,3 +17,27 @@
         owner={{ lookup('ansible.builtin.env', 'USER') }}
   changed_when: false
   tags: localdev
+
+- name: Add write privilege to group for media folder
+  ansible.builtin.file: path={{ nginx_media_dir }}
+        recurse=yes
+        mode=g+w
+        state=directory
+  changed_when: false
+  tags: localdev
+
+- name: Add write privilege to group for static folder
+  ansible.builtin.file: path={{ nginx_static_dir }}
+        recurse=yes
+        mode=g+w
+        state=directory
+  changed_when: false
+  tags: localdev
+
+- name: Add write privilege to group for upload folder
+  ansible.builtin.file: path={{ lovelace_private_storage }}
+        recurse=yes
+        mode=g+w
+        state=directory
+  changed_when: false
+  tags: localdev
