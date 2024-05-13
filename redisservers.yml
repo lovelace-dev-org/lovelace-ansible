@@ -15,5 +15,6 @@
 
   roles:
     - base
-    - geerlingguy.redis
     - ca_signed
+    - logclient
+    - geerlingguy.redis

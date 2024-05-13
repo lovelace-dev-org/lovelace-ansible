@@ -2,3 +2,4 @@
 ca_key_path: /etc/ssl/ca.key
 ca_crt_path: /etc/ssl/ca.crt
 ca_passphrase:
+ca_cn: Lovelace CA

@@ -43,12 +43,13 @@
   notify: restart rabbitmq-server
 
 - name: Write extra configuration
-  template:
+  ansible.builtin.template:
     src: templates/rabbitmq.conf.j2
-    dst: "{{ rabbitmq_config_path }}"
+    dest: "{{ rabbitmq_config_path }}"
     mode: "640"
     owner: rabbitmq
     group: rabbitmq
+  notify: restart rabbitmq-server
 
 - ansible.builtin.import_tasks: setup_vhosts.yml
 

@@ -15,5 +15,6 @@
 
   roles:
     - base
-    - rabbitmq
     - ca_signed
+    - logclient
+    - rabbitmq

@@ -1,11 +1,4 @@
 ---
-
-- name: Install packages required by the Django app inside virtualenv
-  ansible.builtin.pip:
-    virtualenv: "{{ virtualenv_path }}"
-    requirements: "{{ requirements_file }}"
-    extra_args: "{{ pip_use_upgrade_flag | ternary('--upgrade', omit) }}"
-
 - name: Run the Django syncdb command
   community.general.django_manage:
     command: syncdb

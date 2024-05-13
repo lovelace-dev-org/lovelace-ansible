@@ -15,12 +15,15 @@ virtualenv_python_version: python3.11
 
 
 use_syslog: true
+syslog_protocol: tcp
 
 # Git settings.
 setup_git_repo: true
 git_branch: ansible-deploy
 
 ca_passphrase: "{{ vault_ca_passphrase }}"
+
+syslog_address: "{{ groups.logservers.0 }}"
 
 # Database settings.
 postgres_use_ssl: true
@@ -63,12 +66,13 @@ redis_extra_config_no_ssl: |
 
 redis_extra_config_ssl: |
   syslog-enabled yes
-  port 0
-  tls-port {{ hostvars[inventory_hostname].port }}
+  tls-port {{ hostvars[inventory_hostname].port | default(6379) }}
   tls-cert-file {{ ssl_crt_path }}
   tls-key-file {{ ssl_key_path }}
   tls-ca-cert-file {{ ca_crt_path }}
 
+redis_self_port: "{{ hostvars[inventory_hostname].port | default(6379) }}"
+redis_port: "{{ 0 if redis_use_ssl else redis_self_port }}"
 redis_extra_config: "{{ redis_extra_config_ssl if redis_use_ssl is true else redis_extra_config_no_ssl }}"
 
 # Application settings.

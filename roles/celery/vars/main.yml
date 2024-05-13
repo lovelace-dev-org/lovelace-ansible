@@ -25,11 +25,9 @@ django_environment:
   LOVELACE_HOSTNAME: localhost
   LOVELACE_HOSTADDR: 127.0.0.1
   LOVELACE_DEFAULT_LANG: "{{ default_lang }}"
-  LOVELACE_REDIS_HOST: "{{ result_redis_host }}"
-  LOVELACE_REDIS_PORT: "{{ result_redis_port }}"
-  LOVELACE_REDIS_RESULT_DB: "{{ result_redis_db }}"
   LOVELACE_REDIS_CACHE: undefined
   LOVELACE_CELERY_BROKER: "{{ worker_celery_broker }}"
+  LOVELACE_CELERY_RESULT: "{{ result_redis }}"
   LOVELACE_SECRET_KEY: undefined
   LOVELACE_PRIVATE_STORAGE: undefined
   MEDIA_ROOT: undefined
@@ -45,4 +43,6 @@ django_environment:
   LOVELACE_CLIENT_CA: "{{ ca_crt_path }}"
   LOVELACE_CLIENT_CERT: "{{ ssl_crt_path }}"
   LOVELACE_CLIENT_KEY: "{{ ssl_key_path }}"
+  LOVELACE_WORKER_USER: "{{ worker_username }}"
+  LOVELACE_RESTRICTED_USER: "{{ sandbox_username }}"
 

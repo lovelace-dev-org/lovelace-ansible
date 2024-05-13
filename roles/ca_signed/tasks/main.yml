@@ -8,21 +8,21 @@
 - name: Create certificate signing request (CSR) for self-signed certificate
   community.crypto.openssl_csr_pipe:
     privatekey_path: "{{ ssl_key_path }}"
-    common_name: "{{ inventory_hostname }}"
-    organization_name: "{{ org_name }}"
+    common_name: "{{ ssl_cn }}"
     extended_key_usage: "{{ ssl_key_usage }}"
-    owner: "{{ ssl_user }}"
   register: csr
+  tags: selfsign.renew
 
 - name: Sign the certificate on the CA machine
   community.crypto.x509_certificate_pipe:
     provider: ownca
     csr_content: "{{ csr.csr }}"
-    ownca_cert: "{{ ca_crt_path }}"
-    ownca_privatekey: "{{ ca_key_path }}"
+    ownca_path: "{{ ca_crt_path }}"
+    ownca_privatekey_path: "{{ ca_key_path }}"
     ownca_privatekey_passphrase: "{{ ca_passphrase }}"
   delegate_to: "{{ groups.ca_server.0 }}"
   register: csr_result
+  tags: selfsign.renew
 
 - name: Save the result
   ansible.builtin.copy:
@@ -31,12 +31,20 @@
     owner: "{{ ssl_user }}"
     mode: "600"
   when: csr_result is changed
+  tags: selfsign.renew
 
-- name: Copy the CA certificate
-  ansible.builtin.synchronize:
+- name: Read the CA certificate
+  ansible.builtin.slurp:
     src: "{{ ca_crt_path }}"
-    dest: "{{ ca_crt_path }}"
-    owner: "{{ ssl_user }}"
-    mode: "600"
+  register: ca_content
   delegate_to: "{{ groups.ca_server.0 }}"
+  tags: selfsign.renew
+
+- name: Save the result
+  ansible.builtin.copy:
+    dest: "{{ ca_crt_path }}"
+    content: "{{ ca_content.content | b64decode }}"
+    owner: "{{ ssl_user }}"
+    mode: "400"
+  tags: selfsign.renew
 

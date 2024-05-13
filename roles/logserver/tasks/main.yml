@@ -5,15 +5,16 @@
     regexp: "{{ item.match }}"
     line: "{{ item.newline }}"
   loop:
-    - match: '^#module\(load="{{ syslog_protocol }}"\)'
-      newline: 'module\(load="{{ syslog_protocol }}"\)'
-    - match: '^#input\(type="{{ syslog_protocol }}" port="514"\)'
-      newline: 'input\(type="{{ syslog_protocol }}" port="{{ syslog_port }}"\)'
+    - match: '^#module\(load="im{{ syslog_protocol }}"\)'
+      newline: 'module(load="im{{ syslog_protocol }}")'
+    - match: '^#input\(type="im{{ syslog_protocol }}" port="514"\)'
+      newline: 'input(type="im{{ syslog_protocol }}" port="{{ syslog_port }}")'
 
 - name: Create template
   blockinfile:
+    path: "{{ syslog_conf_path }}"
     block: |
-      $template byhost,"/var/logs/%HOSTNAME%/%syslogseverity-text%.log"
+      $template byhost,"/var/log/%HOSTNAME%/%syslogseverity-text%.log"
       *.* -?byhost
   notify: Restart rsyslogd
 
@@ -24,4 +25,4 @@
     immediate: yes
     permanent: yes
   when: firewall_preconfigured is not defined or firewall_preconfigured is false
-
+  

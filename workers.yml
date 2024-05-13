@@ -11,7 +11,7 @@
     run_django_db_migrations: false
     run_django_collectstatic: false
     ssl_key_usage: ["clientAuth"]
-    ssl_user: "{{ celery_user }}"
+    ssl_user: "{{ worker_username }}"
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
@@ -19,7 +19,8 @@
   roles:
     - base
     - ca_signed
-    - web
+    - logclient
+    - lovelace
     - checker
     - pychecker
     - celery

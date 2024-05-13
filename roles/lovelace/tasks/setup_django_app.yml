@@ -1,0 +1,8 @@
+---
+
+- name: Install packages required by the Django app inside virtualenv
+  ansible.builtin.pip:
+    virtualenv: "{{ virtualenv_path }}"
+    requirements: "{{ requirements_file }}"
+    extra_args: "{{ pip_use_upgrade_flag | ternary('--upgrade', omit) }}"
+

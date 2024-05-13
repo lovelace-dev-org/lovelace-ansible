@@ -16,6 +16,7 @@
   roles:
     - base
     - ca_signed
-    - web
+    - logclient
+    - lovelace
     - gunicorn
     - nginx

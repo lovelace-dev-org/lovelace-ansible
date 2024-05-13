@@ -11,5 +11,5 @@ autorestart = true
 
 user = root
 
-stdout_logfile = {% 'syslog' if use_syslog else celery_log_file %}
+stdout_logfile = {{ 'syslog' if use_syslog else celery_log_file }}
 redirect_stderr = true

@@ -6,4 +6,11 @@
     mode: "644"
     owner: root
     group: root
+  notify: Restart rsyslogd  
 
+- name: Send test message
+  syslogger:
+    msg: "Connection test message"
+    priority: warning
+    facility: syslog
+  tags: never,logclient.test

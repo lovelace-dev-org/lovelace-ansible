@@ -1,4 +1,6 @@
 ---
 - ansible.builtin.import_tasks: setup_gunicorn.yml
 
+- ansible.builtin.import_tasks: django_management.yml
+
 - ansible.builtin.import_tasks: setup_supervisor.yml

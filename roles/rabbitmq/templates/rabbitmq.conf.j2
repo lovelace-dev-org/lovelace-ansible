@@ -3,20 +3,18 @@ log.syslog = true
 log.syslog.formatter = json
 {% endif %}
 
-{% if rabbitmq_use_tls %}
+{% if rabbitmq_use_ssl %}
 listeners.tcp = none
 
 listeners.ssl.default = {{ rabbitmq_port }}
-ssl_options.cacertfile = {{ rabbitmq_ssl_dest_dir }}/ca_certificate.pem
-ssl_options.certfile   = {{ rabbitmq_ssl_dest_dir }}/{{ item_hostname }}.pem
-ssl_options.keyfile    = {{ rabbitmq_ssl_dest_dir }}/{{ item_hostname }}.key
-# ssl_options.verify     = verify_peer
-ssl_options.fail_if_no_peer_cert = false
+ssl_options.cacertfile = {{ ca_crt_path }}
+ssl_options.certfile   = {{ ssl_crt_path }}
+ssl_options.keyfile    = {{ ssl_key_path }}
+ssl_options.verify     = verify_peer
 
-management.ssl.port = {{ rabbitmq_api_port }}
-management.ssl.cacertfile = {{ rabbitmq_ssl_dest_dir }}/ca_certificate.pem
-management.ssl.certfile = {{ rabbitmq_ssl_dest_dir }}/{{ item_hostname }}.pem
-management.ssl.keyfile = {{ rabbitmq_ssl_dest_dir }}/{{ item_hostname }}.key
-management.ssl.password = {{ rabbitmq_api_password }}
-management.ssl.fail_if_no_peer_cert = false
+management.ssl.port = {{ rabbitmq_api_port }} 
+management.ssl.cacertfile = {{ ca_crt_path }} 
+management.ssl.certfile = {{ ssl_crt_path }} 
+management.ssl.keyfile = {{ ssl_key_path }} 
+management.ssl.password = {{ rabbitmq_api_password }} 
 {% endif %}

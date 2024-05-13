@@ -2,4 +2,7 @@
 ssl_key_path: /etc/ssl/key.pem
 ssl_crt_path: /etc/ssl/crt.pem
 ssl_key_usage: ["serverAuth", "clientAuth"]
+ca_key_path: /etc/ssl/ca.key
+ca_crt_path: /etc/ssl/ca.crt
 ssl_user: root
+ssl_cn: lovelace

@@ -6,11 +6,13 @@
   become_user: root
   vars:
     update_apt_cache: true
-
+    ssl_user: postgres
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
 
   roles:
     - base
+    - ca_signed
+    - logclient
     - db
