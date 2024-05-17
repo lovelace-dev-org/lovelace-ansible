@@ -1,5 +1,5 @@
 
-lovelace-ansible-playbook
+Lovelace Ansible Playbook
 =========================
 
 Fork of [django-ansible].
@@ -9,12 +9,16 @@ It installs and configures the following applications that are required to run t
 
 - Nginx
 - Gunicorn
-- PostgreSQL
+- PostgresQL
 - Supervisor
 - Virtualenv
 - Redis
 - Celery
 - RabbitMQ
+
+It can also create its own CA and distribute self-signed certificates on the hosts for enabling
+encrypted communication and certificate based authentication. It is also possible to configure a
+central logserver, and have all hosts send their logs there.
 
 Depending on configuration these will either be installed in the same machine, or into separate
 machines, with redundancy where necessary. In addition to installing the requirements, it will also
@@ -23,6 +27,8 @@ combination with Lovelace to check Python and C exercises.
 
 Current installation options are:
 - Vagrant for local testing and demo
+- Development installation on localhost
+- Production installation on multiple hosts
 
 ## Ansible Galaxy Roles
 
@@ -72,7 +78,13 @@ them automatically with Supervisor, you can remove the `run_manually` variable f
 Be aware that this creates a lot of changes on your local computer. Therefore creating a separate virtual machine for development is recommended. The user executing the command must be in sudoers.
 
 ```
-ansible-playbook -i hosts.yml local.yml
+sudo ansible-playbook -i hosts.yml local.yml
+```
+
+If you are using a virtualenv for Ansible, you need to pass its environment variables to sudo:
+
+```
+sudo -E env PATH=$PATH ansible-playbook -i hosts.yml local.yml
 ```
 
 This installation creates two virtual envs `/opt/lovelace/` and `/checkers/python/`, and clones the Lovelace
@@ -97,7 +109,7 @@ and manually start workers with Celery (need to run as root for demotion to work
 
 ```
 cd /opt/lovelace/lovelace/webapp
-celery -A lovelace worker -Q default --loglevel=info -n checker1@%h
+sudo -E env PATH=$PATH celery -A lovelace worker -Q default --loglevel=info -n checker1@%h
 ```
 
 
