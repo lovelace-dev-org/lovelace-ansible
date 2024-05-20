@@ -7,3 +7,6 @@ sandbox_username: peon
 checking_env_path: /checkers/python
 use_celery_beat: false
 restart_target: celery
+celery_log_size: 52428800     # 50 MB
+celery_log_backups: 4
+celery_loglevel: warn

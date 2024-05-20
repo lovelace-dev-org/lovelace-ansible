@@ -1,7 +1,13 @@
-{% if use_syslog %}
 [supervisord]
+{% if use_syslog %}
 logfile = syslog
+{% else %}
+logfile_maxbytes = {{ celery_log_size }}
+logfile_backups = {{ celery_log_backups }}
+loglevel = {{ celery_loglevel }}
 {% endif %}
+
+
 
 [program:{{ celery_application_name }}]
 command = {{ celery_scripts_dir }}/{{ celery_application_name }}_start

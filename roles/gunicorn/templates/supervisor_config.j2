@@ -1,7 +1,12 @@
-{% if use_syslog %}
 [supervisord]
+{% if use_syslog %}
 logfile = syslog
+{% else %}
+logfile_maxbytes = {{ gunicorn_log_size }}
+logfile_backups = {{ gunicorn_log_backups }}
+loglevel = {{ gunicorn_loglevel }}
 {% endif %}
+
 
 [program:{{ application_name }}]
 command = {{ virtualenv_path }}/bin/gunicorn_start

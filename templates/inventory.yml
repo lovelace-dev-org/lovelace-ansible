@@ -5,7 +5,6 @@ workers:
 rabbitmq:
   hosts:
     rabbitmq.placehold.er:
-      rabbitmq_use_ssl: false
       port:
 result_redis:
   hosts:
