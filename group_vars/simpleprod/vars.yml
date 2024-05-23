@@ -21,9 +21,9 @@ syslog_protocol: tcp
 setup_git_repo: true
 git_branch: ansible-deploy
 
-ca_passphrase: "{{ vault_ca_passphrase }}"
+# ca_passphrase: "{{ vault_ca_passphrase }}"
 
-syslog_address: "{{ groups.logservers.0 }}"
+# syslog_address: "{{ groups.logservers.0 }}"
 
 # Database settings, this deployment puts the database on the same server
 remote_db: false
@@ -94,6 +94,7 @@ run_django_collectstatic: true
 
 default_lang: en
 
+use_lovelace_api: true
 
 content_import_list:
 - src_folder: ./content

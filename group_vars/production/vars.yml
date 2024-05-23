@@ -92,6 +92,7 @@ requirements_file: "{{ project_path }}/requirements.txt"
 run_django_db_migrations: true
 run_django_collectstatic: true
 
+use_lovelace_api: false
 
 default_lang: en
 

@@ -1,5 +1,7 @@
 ---
 
+- ansible.builtin.import_playbook: logservers.yml
+
 - name: Provision standalone base functionality servers
   hosts: lovelace
   become: true
@@ -13,8 +15,30 @@
 
   roles:
     - base
+    - logclient
     - db
     - geerlingguy.redis
+    - lovelace
+    - gunicorn
+    - nginx
+
+- name: Provision the gateway server
+  hosts: gateway
+  become_user: root
+  remote_user: "{{ server_user }}"
+  vars:
+    update_apt_cache: true
+    git_repo: https://github.com/lovelace-dev-org/lovelace-gateway
+    git_branch: main
+    is_gateway: true
+  module_defaults:
+    ansible.builtin.apt:
+      force_apt_get: true
+
+  roles:
+    - base
+    - logclient
+    - db
     - lovelace
     - gunicorn
     - nginx

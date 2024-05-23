@@ -98,6 +98,8 @@ checking_env_path: /checkers/python
 worker_username: worker
 sandbox_username: peon
 
+use_lovelace_api: true
+
 content_import_list:
 - src_folder: ./content
   filename: dev-first-instance_export.zip

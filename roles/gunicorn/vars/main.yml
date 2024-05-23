@@ -11,7 +11,7 @@ nginx_media_dir: "{{ virtualenv_path }}/media/"
 restart_target: "{{ application_name }}"
 
 # Django environment variables.
-django_environment:
+lovelace_environment:
   DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
   DJANGO_SUPERUSER_USERNAME: "{{ django_superuser_name }}"
   DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_pass }}"
@@ -38,4 +38,24 @@ django_environment:
   LOVELACE_CLIENT_CA: "{{ ca_crt_path | default('') }}"
   LOVELACE_CLIENT_CERT: "{{ ssl_crt_path | default('') }}"
   LOVELACE_CLIENT_KEY: "{{ ssl_key_path | default('') }}"
+  ENABLE_MANAGEMENT_API: "{{ '1' if use_lovelace_api else '' }}"
+  LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"
 
+gateway_environment:
+  DJANGO_SETTINGS_MODULE: gateway.settings
+  GATEWAY_HOSTNAME: "{{ lovelace_main_host }}"
+  GATEWAY_HOSTADDR: "{{ lovelace_main_addr }}"
+  GATEWAY_SECRET_KEY: "{{ django_secret_key }}"
+  GATEWAY_DB_NAME: "{{ db_name }}"
+  GATEWAY_DB_USER: "{{ db_user }}"
+  GATEWAY_DB_PASS: "{{ db_password }}"
+  GATEWAY_DB_HOST: "{{ db_host }}"
+  GATEWAY_DB_PORT: "{{ db_port }}"
+  GATEWAY_DB_USE_SSL: "{{ '1' if postgres_use_ssl else '' }}"
+  GATEWAY_CLIENT_CA: "{{ ca_crt_path | default('') }}"
+  GATEWAY_CLIENT_CERT: "{{ ssl_crt_path | default('') }}"
+  GATEWAY_CLIENT_KEY: "{{ ssl_key_path | default('') }}"
+  GATEWAY_STATIC_ROOT: "{{ nginx_static_dir }}"
+  LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"
+
+django_environment: "{{ gateway_environment if is_gateway else lovelace_environment }}"
