@@ -1,4 +1,10 @@
 ---
+- name: Install Gunicorn
+  ansible.builtin.pip:
+    virtualenv: "{{ virtualenv_path }}"
+    name: gunicorn
+    extra_args: "{{ pip_use_upgrade_flag | ternary('--upgrade', omit) }}"
+
 - name: Create the Gunicorn script file
   ansible.builtin.template: src=gunicorn_start.j2
             dest={{ virtualenv_path }}/bin/gunicorn_start
