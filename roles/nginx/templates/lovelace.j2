@@ -54,7 +54,7 @@ server {
 
     {% if "gateway" in groups and not is_gateway %}
       # Enable forwards from gateway
-      add_header Access-Control-Allow-Origin "{{ gateway_host }}"
+      add_header Access-Control-Allow-Origin "{{ gateway_host }}";
     {% endif %}
 
 

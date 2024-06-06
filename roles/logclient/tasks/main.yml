@@ -7,6 +7,7 @@
     owner: root
     group: root
   notify: Restart rsyslogd  
+  tags: logclient
 
 - name: Send test message
   syslogger:

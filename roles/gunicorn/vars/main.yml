@@ -42,7 +42,7 @@ lovelace_environment:
   LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"
 
 gateway_environment:
-  DJANGO_SETTINGS_MODULE: gateway.settings
+  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
   GATEWAY_HOSTNAME: "{{ lovelace_main_host }}"
   GATEWAY_HOSTADDR: "{{ lovelace_main_addr }}"
   GATEWAY_SECRET_KEY: "{{ django_secret_key }}"

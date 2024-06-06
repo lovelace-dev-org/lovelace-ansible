@@ -1,0 +1,23 @@
+- name: Provision the gateway server
+  hosts: gateway
+  become_user: root
+  remote_user: "{{ server_user }}"
+  vars:
+    update_apt_cache: true
+    git_repo: https://github.com/lovelace-dev-org/lovelace-gateway
+    git_branch: main
+    is_gateway: true
+    django_settings_file: gateway.settings
+    application_name: gateway
+  module_defaults:
+    ansible.builtin.apt:
+      force_apt_get: true
+
+  roles:
+    - base
+    - logclient
+    - db
+    - lovelace
+    - gunicorn
+    - nginx
+    - gateway

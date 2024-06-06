@@ -1,5 +1,8 @@
 ---
 application_name: lovelace
+gunicorn_num_workers: 2
+gunicorn_max_requests: 0
+gunicorn_timeout_seconds: 300
 gunicorn_user: "{{ application_name }}"
 gunicorn_group: webapps
 restart_target: lovelace

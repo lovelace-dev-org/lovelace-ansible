@@ -14,8 +14,9 @@ enable_deadsnakes_ppa: true
 virtualenv_python_version: python3.11
 
 
-use_syslog: false
+use_syslog: true
 syslog_protocol: tcp
+syslog_address: "{{ groups.logservers.0 }}"
 
 # Git settings.
 setup_git_repo: true
@@ -95,6 +96,8 @@ run_django_collectstatic: true
 default_lang: en
 
 use_lovelace_api: true
+lovelace_api_key: "{{ vault_lovelace_api_key }}"
+gateway_host: "{{ groups.gateway.0 }}"
 
 content_import_list:
 - src_folder: ./content
