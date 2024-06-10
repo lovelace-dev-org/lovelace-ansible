@@ -22,9 +22,7 @@ syslog_address: "{{ groups.logservers.0 }}"
 setup_git_repo: true
 git_branch: ansible-deploy
 
-# ca_passphrase: "{{ vault_ca_passphrase }}"
-
-# syslog_address: "{{ groups.logservers.0 }}"
+ca_passphrase: "{{ vault_ca_passphrase }}"
 
 # Database settings, this deployment puts the database on the same server
 remote_db: false
@@ -47,10 +45,11 @@ rabbitmq_application_vhost: "{{ application_name }}"
 rabbitmq_application_user: "{{ application_name }}"
 rabbitmq_application_password: "{{ vault_rabbitmq_application_password }}"     # vault
 
-redis_use_ssl: false
 rabbitmq_worker_user: "{{ application_name }}-worker"
 rabbitmq_worker_password: "{{ vault_rabbitmq_worker_password }}"
 
+# Redis settigns for cache and result backend
+redis_use_ssl: false
 result_redis_host: localhost                # read from inventory
 result_redis_port: 6379                     # read from
 # redis_bind_interface: "{{ inventory_hostname }}"
@@ -61,7 +60,6 @@ cache_redis_db: 0
 
 cache_redis: "redis{{ 's' if redis_use_ssl }}://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
 result_redis: "redis{{ 's' if redis_use_ssl }}://{{ result_redis_host }}:{{ result_redis_port }}/{{ result_redis_db }}"
-
 
 redis_extra_config_no_ssl: |
   syslog-enabled no
@@ -87,7 +85,6 @@ django_superuser_mail: "{{ vault_django_superuser_mail }}"                      
 celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 worker_celery_broker: "amqp://{{ rabbitmq_worker_user }}:{{ rabbitmq_worker_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 
-
 requirements_file: "{{ project_path }}/requirements.txt"
 
 run_django_db_migrations: true
@@ -109,3 +106,10 @@ content_import_list:
 nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
 nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
 
+# Monitoring
+monitored_nodes: "{{ groups.all }}"
+grafana_admin_name: "{{ vault_grafana_admin_name }}"
+grafana_admin_pass: "{{ vault_grafana_admin_pass }}"
+grafana_admin_email: "{{ vault_grafana_admin_email }}"
+grafana_secret_key: "{{ vault_grafana_secret_key }}"
+django_use_prometheus: true

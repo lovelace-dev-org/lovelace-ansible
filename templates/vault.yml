@@ -6,6 +6,9 @@ vault_django_secret_key:
 vault_django_superuser_name:
 vault_django_superuser_pass:
 vault_django_superuser_mail:
+vault_grafana_admin_name:
+vault_grafana_admin_pass:
+vault_grafana_secret_key:
 vault_nginx_ssl: |
 
 vault_nginx_key: |

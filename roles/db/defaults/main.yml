@@ -1,4 +1,6 @@
 ---
 db_port: 5432
 db_host: localhost
+db_name: default
+db_user: admin
 postgres_use_ssl: false

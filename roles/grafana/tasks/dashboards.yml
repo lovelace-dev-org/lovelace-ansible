@@ -1,0 +1,25 @@
+---
+- name: Import Node Export dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_username }}"
+    grafana_password: "{{ grafana_admin_password }}"
+    dashboard_id: 1860
+    dashboard_revision: "{{ dashboard_node_export_revision }}"
+
+- name: Import Django dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_username }}"
+    grafana_password: "{{ grafana_admin_password }}"
+    dashboard_id: 17658
+    dashboard_revision: "{{ dashboard_django_revision }}"
+
+- name: Import Redis dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_username }}"
+    grafana_password: "{{ grafana_admin_password }}"
+    dashboard_id: 12776
+    dashboard_revision: "{{ dashboard_django_revision }}"
+

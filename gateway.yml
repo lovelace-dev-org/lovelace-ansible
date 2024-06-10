@@ -21,3 +21,4 @@
     - gunicorn
     - nginx
     - gateway
+    - node_exporter

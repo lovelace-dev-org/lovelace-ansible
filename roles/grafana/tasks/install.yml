@@ -1,0 +1,33 @@
+---
+- name: Add the Grafana release signing key to the apt trusted keys
+  ansible.builtin.apt_key:
+    url: https://apt.grafana.com/gpg.key
+    state: present
+
+- name: Add the Grafana repository to the apt sources list
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.grafana.com stable main"
+    update_cache: {{ update_apt_cache }}
+    state: present
+
+- name: Install Grafana
+  ansible.builtin.apt:
+    update_cache: "{{ update_apt_cache }}"
+    state: present
+    name:
+      - grafana
+
+- name: Make sure Grafana is enabled and running
+  ansible.builtin.service:
+    name: grafana
+    state: started
+    enabled: true
+
+- name: Create custom configuration
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: "{{ grafana_config_path }}"
+    mode: "640"
+  notify: restart grafana
+
+# create a user with less privileges

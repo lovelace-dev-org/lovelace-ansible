@@ -1,0 +1,6 @@
+---
+- ansible.builtin.import_tasks: install.yml
+
+- ansible.builtin.import_tasks: datasources.yml
+
+- ansible.builtin.import_tasks: dashboards.yml

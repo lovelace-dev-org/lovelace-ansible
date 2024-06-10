@@ -10,3 +10,4 @@ gunicorn_log_size: 52428800     # 50 MB
 gunicorn_log_backups: 4
 gunicorn_loglevel: warn
 is_gateway: false
+django_use_prometheus: false

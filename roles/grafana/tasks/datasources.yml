@@ -1,0 +1,9 @@
+---
+- name: Create prometheus datasource
+  community.grafana.grafana_datasource:
+    name: local_prometheus
+    ds_type: prometheus
+    ds_url: "{{ prometheus_host }}:{{ prometheus_port }}"
+    access: "{{ prometheus_access }}"
+    tls_skip_verify: true
+

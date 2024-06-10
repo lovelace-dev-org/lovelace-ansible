@@ -40,6 +40,7 @@ lovelace_environment:
   LOVELACE_CLIENT_KEY: "{{ ssl_key_path | default('') }}"
   ENABLE_MANAGEMENT_API: "{{ '1' if use_lovelace_api else '' }}"
   LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"
+  LOVELACE_PROMETHEUS_EXPORT: "{{ '1' if django_use_prometheus else '' }}"
 
 gateway_environment:
   DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"

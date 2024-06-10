@@ -1,0 +1,17 @@
+---
+prometheus_host: localhost
+prometheus_port: 9090
+prometheus_access: direct
+grafana_config_path: /etc/grafana/grafana.ini
+grafana_use_ssl: false
+grafana_crt_file: /etc/ssl/grafana.crt
+grafana_key_file: /etc/ssl/grafana.key
+grafana_host: localhost
+grafana_port: 3000
+grafana_admin_name: admin
+grafana_admin_pass: insecure
+grafana_admin_email:
+grafana_secret_key: insecuresecretkey
+dashboard_node_export_revision: 37
+dashboard_django_revision: 2
+dashboard_redis_revision: 2

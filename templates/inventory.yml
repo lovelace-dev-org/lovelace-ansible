@@ -32,6 +32,12 @@ ca_server:
 logservers:
   hosts:
     logserver.placehold.er:
+prometheus:
+  hosts:
+    prometheus.placehold.er:
+grafana:
+  hosts:
+    grafana.placehold.er:
 mediaservers:
   hosts:
     mediaserver.placehold.er:
@@ -46,3 +52,5 @@ production:
     dbservers:
     logservers:
     mediaservers:
+    prometheus:
+    grafana:

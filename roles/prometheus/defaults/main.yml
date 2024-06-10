@@ -1,0 +1,6 @@
+---
+prometheus_port: 9090
+prometheus_config_path: /etc/prometheus/prometheus.yml
+prometheus_scrape_interval: 15s
+prometheus_evaluation_interval: 15s
+prometheus_scrape_timeout: 10s
