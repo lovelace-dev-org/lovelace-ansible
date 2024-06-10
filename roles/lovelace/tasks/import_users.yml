@@ -1,0 +1,54 @@
+---
+
+- name: Create temporary folder for import files
+  become_user: "{{ gunicorn_user }}"
+  become: true
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: import
+  register: import_dir
+
+- name: Copy additional content to server's tmp
+  ansible.builtin.copy:
+    src: "{{ item.src_folder }}/{{ item.filename }}"
+    dest: "{{ import_dir.path }}/{{ item.filename }}"
+    owner: "{{ gunicorn_user }}"
+  when: import_dir.path is defined
+  with_items: "{{ content_import_list }}"
+
+- name: Import content to Lovelace
+  become_user: "{{ gunicorn_user }}"
+  become: true
+  community.general.django_manage:
+    command: "import_course --responsible={{ item.responsible }} --group={{ item.group }} {{ import_dir.path}}/{{ item.filename }}"
+    app_path: "{{ project_path }}/webapp"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: "{{ django_settings_file }}"
+  when: import_dir.path is defined
+  environment: "{{ django_environment }}"
+  with_items: "{{ content_import_list }}"
+
+- name: Create initial revisions
+  community.general.django_manage:
+    command: "createinitialrevisions"
+    app_path: "{{ project_path }}/webapp"
+    virtualenv: "{{ virtualenv_path }}"
+    settings: "{{ django_settings_file }}"
+  environment: "{{ django_environment }}"
+
+- name: Clear the temporary folder
+  become_user: "{{ gunicorn_user }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ import_dir.path }}/{{ item.filename }}"
+    state: absent
+  when: import_dir.path is defined
+  with_items: "{{ content_import_list }}"
+
+- name: Remove the temporary folder
+  become_user: "{{ gunicorn_user }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ import_dir.path }}"
+    state: absent
+  when: import_dir.path is defined
