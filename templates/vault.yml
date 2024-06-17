@@ -9,6 +9,7 @@ vault_django_superuser_mail:
 vault_grafana_admin_name:
 vault_grafana_admin_pass:
 vault_grafana_secret_key:
+vault_prometheus_auth_pass:
 vault_nginx_ssl: |
 
 vault_nginx_key: |

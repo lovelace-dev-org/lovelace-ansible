@@ -114,4 +114,5 @@ grafana_admin_pass: "{{ vault_grafana_admin_pass }}"
 grafana_admin_email: "{{ vault_grafana_admin_email }}"
 grafana_secret_key: "{{ vault_grafana_secret_key }}"
 django_use_prometheus: true
+prometheus_auth_pass: "{{ vault_prometheus_auth_pass }}"
 prometheus_server_ip: "{{ groups.monitor.0 }}"

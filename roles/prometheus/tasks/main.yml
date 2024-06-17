@@ -7,13 +7,6 @@
     - prometheus
   tags: prometheus
 
-- name: Make sure Prometheus is started
-  ansible.builtin.service:
-    name: prometheus
-    state: started
-    enabled: true
-  tags: prometheus
-
 - name: Get IP addresses of monitored nodes
   ansible.builtin.setup:
     gather_subset: default_ipv4
@@ -22,6 +15,16 @@
   loop: "{{ monitored_nodes }}"
   tags: prometheus
 
+- name: Create password file for Django Prometheus access
+  ansible.builtin.lineinfile:
+    path: "{{ django_prometheus_pwfile }}"
+    line: "{{ prometheus_auth_pass }}"
+    create: yes
+    owner: root
+    group: prometheus
+    mode: "640"
+  when: django_use_prometheus
+
 - name: Write extra configuration
   ansible.builtin.template:
     src: prometheus.yml.j2
@@ -29,3 +32,11 @@
     mode: "644"
   notify: restart prometheus
   tags: prometheus
+
+- name: Make sure Prometheus is started
+  ansible.builtin.service:
+    name: prometheus
+    state: started
+    enabled: true
+  tags: prometheus
+

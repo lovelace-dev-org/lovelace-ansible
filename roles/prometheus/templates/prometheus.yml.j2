@@ -59,6 +59,9 @@ scrape_configs:
 
   {% if django_use_prometheus %}
   - job_name: lovelace
+    basic_auth:
+      username: prometheus
+      password_file: {{ django_prometheus_pwfile }}
     metrics_path: /prometheus/metrics
     static_configs:
     {% for host in lovelace_instances %}

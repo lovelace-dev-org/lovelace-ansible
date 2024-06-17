@@ -24,6 +24,16 @@
   ansible.builtin.command: openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048 creates=/etc/ssl/certs/dhparams.pem
   when: nginx_strong_dh_group is defined and nginx_strong_dh_group
 
+- name: Create htpassword if server is exposing Prometheus metrics
+  community.general.htpwasswd:
+    path: "{{ nginx_htpasswd_path }}"
+    name: prometheus
+    password: "{{ prometheus_auth_pass }}"
+    owner: root
+    group: www-data
+    mode: "640"
+  when: django_use_prometheus
+
 - name: Create the Nginx configuration file
   ansible.builtin.template: src=lovelace.j2
             dest=/etc/nginx/sites-available/{{ application_name }}

@@ -9,3 +9,4 @@ node_export_tls: false
 rabbit_use_prometheus: false
 django_use_prometheus: false
 postgres_use_prometheus: false
+django_prometheus_pwfile: /etc/prometheus/django-auth
