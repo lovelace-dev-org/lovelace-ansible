@@ -1,7 +1,7 @@
 ---
 - name: Install Node Exporter
   ansible.builtin.apt:
-    update_cache: "{{ update_cache }}"
+    update_cache: "{{ update_apt_cache }}"
     state: present
     name:
     - prometheus-node-exporter

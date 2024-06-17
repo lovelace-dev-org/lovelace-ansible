@@ -1,25 +1,40 @@
 ---
+- name: Create temporary folder for import files
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: import
+  register: import_dir
+
+- name: Copy dashboard files to server
+  ansible.builtin.copy:
+    src: "{{ item.src_folder }}/{{ item.filename }}"
+    dest: "{{ import_dir.path }}/{{ item.filename }}"
+  when: import_dir.path is defined
+  with_items: "{{ dashboard_import_list }}"
+
 - name: Import Node Export dashboard
   community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
-    grafana_user: "{{ grafana_admin_username }}"
-    grafana_password: "{{ grafana_admin_password }}"
+    grafana_url: "http://{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_name }}"
+    grafana_password: "{{ grafana_admin_pass }}"
     dashboard_id: 1860
     dashboard_revision: "{{ dashboard_node_export_revision }}"
 
 - name: Import Django dashboard
   community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
-    grafana_user: "{{ grafana_admin_username }}"
-    grafana_password: "{{ grafana_admin_password }}"
-    dashboard_id: 17658
+    grafana_url: "http://{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_name }}"
+    grafana_password: "{{ grafana_admin_pass }}"
     dashboard_revision: "{{ dashboard_django_revision }}"
+    path: "{{ import_dir.path }}/django.json"
+    overwrite: true
+  notify: restart grafana
 
 - name: Import Redis dashboard
   community.grafana.grafana_dashboard:
-    grafana_url: "{{ grafana_host }}:{{ grafana_port }}"
-    grafana_user: "{{ grafana_admin_username }}"
-    grafana_password: "{{ grafana_admin_password }}"
+    grafana_url: "http://{{ grafana_host }}:{{ grafana_port }}"
+    grafana_user: "{{ grafana_admin_name }}"
+    grafana_password: "{{ grafana_admin_pass }}"
     dashboard_id: 12776
     dashboard_revision: "{{ dashboard_django_revision }}"
 

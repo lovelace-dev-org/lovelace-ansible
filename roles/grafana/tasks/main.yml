@@ -1,6 +1,9 @@
 ---
 - ansible.builtin.import_tasks: install.yml
+  tags: grafana
 
 - ansible.builtin.import_tasks: datasources.yml
+  tags: grafana
 
 - ansible.builtin.import_tasks: dashboards.yml
+  tags: grafana

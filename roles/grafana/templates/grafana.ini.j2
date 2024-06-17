@@ -10,6 +10,7 @@ type = postgres
 host = {{ db_host }}:{{ db_port }}
 name = {{ db_name }}
 user = {{ db_user }}
+password = {{ db_password }}
 {% if postgres_use_ssl %}
 ca_cert_path = {{ ca_crt_path }}
 client_key_path = {{ ssl_key_path }}

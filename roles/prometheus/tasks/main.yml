@@ -1,16 +1,26 @@
 ---
 - name: Install Prometheus
   ansible.builtin.apt:
-    update_cache: "{{ update_cache }}"
+    update_cache: "{{ update_apt_cache }}"
     state: present
     name:
     - prometheus
+  tags: prometheus
 
 - name: Make sure Prometheus is started
   ansible.builtin.service:
     name: prometheus
     state: started
     enabled: true
+  tags: prometheus
+
+- name: Get IP addresses of monitored nodes
+  ansible.builtin.setup:
+    gather_subset: default_ipv4
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  loop: "{{ monitored_nodes }}"
+  tags: prometheus
 
 - name: Write extra configuration
   ansible.builtin.template:
@@ -18,3 +28,4 @@
     dest: "{{ prometheus_config_path }}"
     mode: "644"
   notify: restart prometheus
+  tags: prometheus
