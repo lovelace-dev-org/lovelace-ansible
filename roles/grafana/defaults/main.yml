@@ -18,4 +18,5 @@ dashboard_redis_revision: 6
 dashboard_import_list:
 - src_folder: ./dashboards
   filename: django.json
-
+- src_folder: ./dashboards
+  filename: redis.json
