@@ -35,6 +35,6 @@
     grafana_url: "http://{{ grafana_host }}:{{ grafana_port }}"
     grafana_user: "{{ grafana_admin_name }}"
     grafana_password: "{{ grafana_admin_pass }}"
-    dashboard_id: 12776
-    dashboard_revision: "{{ dashboard_django_revision }}"
+    dashboard_id: 763
+    dashboard_revision: "{{ dashboard_redis_revision }}"
 
