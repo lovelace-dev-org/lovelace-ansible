@@ -4,6 +4,14 @@
   ansible.builtin.apt: name=nginx update_cache={{ update_apt_cache }} state=present
   tags: packages
 
+- name: Install passlib
+  ansible.builtin.apt:
+    name: python3-passlib
+    update_cache: "{{ update_apt_cache }}"
+    state: present
+  when: django_use_prometheus
+  tags: packages
+
 - name: Copy the SSL certificate to the remote server
   ansible.builtin.copy:
     content={{ nginx_ssl_crt }}
@@ -25,7 +33,7 @@
   when: nginx_strong_dh_group is defined and nginx_strong_dh_group
 
 - name: Create htpassword if server is exposing Prometheus metrics
-  community.general.htpwasswd:
+  community.general.htpasswd:
     path: "{{ nginx_htpasswd_path }}"
     name: prometheus
     password: "{{ prometheus_auth_pass }}"

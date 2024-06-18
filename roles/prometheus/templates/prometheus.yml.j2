@@ -59,6 +59,7 @@ scrape_configs:
 
   {% if django_use_prometheus %}
   - job_name: lovelace
+    scheme: https
     basic_auth:
       username: prometheus
       password_file: {{ django_prometheus_pwfile }}
