@@ -6,6 +6,9 @@ prometheus_evaluation_interval: 15s
 prometheus_scrape_timeout: 10s
 node_export_port: 9100
 node_export_tls: false
+redis_use_prometheus: false
+redis_export_tls: false
+redis_export_port: 9121
 rabbit_use_prometheus: false
 django_use_prometheus: false
 postgres_use_prometheus: false

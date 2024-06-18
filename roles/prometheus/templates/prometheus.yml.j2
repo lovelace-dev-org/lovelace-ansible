@@ -51,6 +51,20 @@ scrape_configs:
       key_file: {{ ssl_key_path }}
     {% endif %}
 
+  {% if redis_use_prometheus %}
+  - job name: redis_exporter
+    static_configs:
+    {% for host in redis_instances %}
+    - targets: ['{{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ redis_export_port }}']
+    {% endfor %}
+    {% if redis_export_tls %}
+    tls_config:
+      ca_file: {{ ca_cert_path }}
+      cert_file: {{ ssl_crt_path }}
+      key_file: {{ ssl_key_path }}
+    {% endif %}
+  {% endif %}
+
   {% if rabbit_use_prometheus %}
   {% endif %}
 

@@ -109,6 +109,7 @@ nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
 # Monitoring
 monitored_nodes: "{{ groups.all }}"
 lovelace_instances: "{{ groups.lovelace }}"
+redis_instances: "{{ groups.lovelace }}"
 grafana_admin_name: "{{ vault_grafana_admin_name }}"
 grafana_admin_pass: "{{ vault_grafana_admin_pass }}"
 grafana_admin_email: "{{ vault_grafana_admin_email }}"
