@@ -15,6 +15,7 @@
   ansible.builtin.file: path={{ project_path }}
         recurse=yes
         owner={{ lookup('ansible.builtin.env', 'SUDO_USER') }}
+        group={{ gunicorn_group }}
   changed_when: false
   tags: localdev
 

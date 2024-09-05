@@ -86,8 +86,9 @@ django_superuser_mail: "{{ vault_django_superuser_mail }}"                      
 celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 worker_celery_broker: "amqp://{{ rabbitmq_worker_user }}:{{ rabbitmq_worker_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 
-
+admins: "{{ vault_django_admins }}"
 requirements_file: "{{ project_path }}/requirements.txt"
+
 
 run_django_db_migrations: true
 run_django_collectstatic: true
