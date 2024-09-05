@@ -1,0 +1,31 @@
+[server]
+{% if grafana_use_ssl %}
+protocol = https
+cert_file = {{ grafana_crt_file }}
+key_file = {{ grafana_key_file }}
+{% endif %}
+
+[database]
+type = postgres
+host = {{ db_host }}:{{ db_port }}
+name = {{ db_name }}
+user = {{ db_user }}
+password = {{ db_password }}
+{% if postgres_use_ssl %}
+ca_cert_path = {{ ca_crt_path }}
+client_key_path = {{ ssl_key_path }}
+client_cert_path = {{ ssl_crt_path }}
+{% endif %}
+
+[security]
+admin_user = {{ grafana_admin_name }}
+admin_password = {{ grafana_admin_pass }}
+admin_email = {{ grafana_admin_email }}
+secret_key = {{ grafana_secret_key }}
+{% if grafana_use_ssl %}
+cookie_secure = true
+{% endif %}
+
+[users]
+allow_sign_up = false
+

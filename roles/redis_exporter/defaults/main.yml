@@ -1,0 +1,2 @@
+---
+exporter_redis_addr: redis://localhost:6379

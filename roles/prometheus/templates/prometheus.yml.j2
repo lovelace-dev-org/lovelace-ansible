@@ -1,0 +1,87 @@
+#jinja2:lstrip_blocks: True
+
+# Sample config for Prometheus.
+
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+  scrape_timeout: {{ prometheus_scrape_timeout }}
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'example'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: ['localhost:9093']
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: node
+    static_configs:
+    {% for host in monitored_nodes %}
+    - targets: ['{{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ node_export_port }}']
+    {% endfor %}
+    {% if node_export_tls %}
+    tls_config:
+      ca_file: {{ ca_cert_path }}
+      cert_file: {{ ssl_crt_path }}
+      key_file: {{ ssl_key_path }}
+    {% endif %}
+
+  {% if redis_use_prometheus %}
+  - job name: redis_exporter
+    static_configs:
+    {% for host in redis_instances %}
+    - targets: ['{{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ redis_export_port }}']
+    {% endfor %}
+    {% if redis_export_tls %}
+    tls_config:
+      ca_file: {{ ca_cert_path }}
+      cert_file: {{ ssl_crt_path }}
+      key_file: {{ ssl_key_path }}
+    {% endif %}
+  {% endif %}
+
+  {% if rabbit_use_prometheus %}
+  {% endif %}
+
+  {% if postgres_use_prometheus %}
+  {% endif %}
+
+  {% if django_use_prometheus %}
+  - job_name: lovelace
+    scheme: https
+    basic_auth:
+      username: prometheus
+      password_file: {{ django_prometheus_pwfile }}
+    metrics_path: /prometheus/metrics
+    static_configs:
+    {% for host in lovelace_instances %}
+    - targets: ['{{ host }}']
+    {% endfor %}
+    tls_config:
+      insecure_skip_verify: true
+  {% endif %}

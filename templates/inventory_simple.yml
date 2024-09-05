@@ -15,10 +15,14 @@ rabbitmq:
   hosts:
     rabbitmq.placehold.er:
       port:
+monitor:
+  hosts:
+    monitor.placehold.er:
 simpleprod:
   children:
     lovelace:
     gateway:
     workers:
     rabbitmq:
+    monitor:
 

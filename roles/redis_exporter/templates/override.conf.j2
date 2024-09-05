@@ -1,0 +1,13 @@
+#jinja2:lstrip_blocks: True
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/prometheus-redis-exporter \
+  --redis.addr={{ exporter_redis_addr }} \
+  {% if redis_use_ssl %}
+  --set-client-name=false \
+  --tls-client-key-file={{ ssl_key_path }} \
+  --tls-client-cert-file={{ ssl_crt_path }} \
+  --tls-ca-cert-file={{ ca_crt_path }} \
+  --skip-tls-verification
+  {% endif %}

@@ -1,0 +1,15 @@
+---
+- name: Install Node Exporter
+  ansible.builtin.apt:
+    update_cache: "{{ update_apt_cache }}"
+    state: present
+    name:
+    - prometheus-node-exporter
+
+- name: Make sure Node Exporter is started
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true
+
+# add TLS configuration in the future, presently must be behind nginx if exposed to outside

@@ -108,3 +108,10 @@ content_import_list:
 nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
 nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
 
+# Monitoring
+# Monitoring
+monitored_nodes: "{{ groups.all }}"
+grafana_admin_name: "{{ vault_grafana_admin_name }}"
+grafana_admin_pass: "{{ vault_grafana_admin_pass }}"
+grafana_admin_email: "{{ vault_grafana_admin_email }}"
+grafana_secret_key: "{{ vault_grafana_secret_key }}"

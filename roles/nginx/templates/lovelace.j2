@@ -108,6 +108,26 @@ server {
         alias   {{ nginx_media_dir }};
     }
 
+    {% if django_use_prometheus %}
+    location /prometheus/ {
+        auth_basic "Prometheus export";
+        auth_basic_user_file {{ nginx_htpasswd_path }};
+
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+
+        # Try to serve static files from nginx, no point in making an
+        # *application* server like Unicorn/Rainbows! serve static files.
+        if (!-f $request_filename) {
+            proxy_pass http://{{ application_name }}_wsgi_server;
+            break;
+        }
+    }
+    {% endif %}
+
     location / {
         if (-f {{ virtualenv_path }}/maintenance_on.html) {
             return 503;
