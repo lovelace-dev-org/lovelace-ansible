@@ -1,6 +1,6 @@
 ---
 
-- ansible.builtin.import_playbook: logservers.yml
+# - ansible.builtin.import_playbook: logservers.yml
 
 - name: Provision standalone base functionality servers
   hosts: lovelace
@@ -15,12 +15,13 @@
 
   roles:
     - base
-    - logclient
+#    - logclient
     - geerlingguy.redis
     - db
     - lovelace
     - gunicorn
     - nginx
-    - node_exporter
+    - certbot
+#    - node_exporter
 
-- ansible.builtin.import_playbook: gateway.yml
+# - ansible.builtin.import_playbook: gateway.yml

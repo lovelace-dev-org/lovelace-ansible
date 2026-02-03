@@ -1,0 +1,3 @@
+{% for variable_name, value in lovelace_environment.items() %}
+{{ variable_name }}={{ value | quote }}
+{% endfor %}

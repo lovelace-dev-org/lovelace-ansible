@@ -16,6 +16,11 @@ cache_redis:
     cacheredis.placehold.er:
       cache_db: 0
       port:
+ws_redis:
+  hosts:
+    wsredis.placehold.er:
+      ws_db: 2
+      port:
 lovelace:
   hosts:
     lovelace.placehold.er:

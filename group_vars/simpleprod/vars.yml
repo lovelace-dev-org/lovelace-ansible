@@ -10,13 +10,11 @@ application_name: lovelace
 # default Python version that came with your Linux distro.
 #
 # More info here: https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes
-enable_deadsnakes_ppa: true
-virtualenv_python_version: python3.11
+enable_deadsnakes_ppa: false
+virtualenv_python_version: python3.12
 
 
-use_syslog: true
-syslog_protocol: tcp
-syslog_address: "{{ groups.logservers.0 }}"
+use_syslog: false
 
 # Git settings.
 setup_git_repo: true
@@ -58,8 +56,13 @@ cache_redis_host: localhost
 cache_redis_port: 6379
 cache_redis_db: 0
 
+ws_redis_host: localhost
+ws_redis_port: 6379
+ws_redis_db: 2
+
 cache_redis: "redis{{ 's' if redis_use_ssl }}://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
 result_redis: "redis{{ 's' if redis_use_ssl }}://{{ result_redis_host }}:{{ result_redis_port }}/{{ result_redis_db }}"
+ws_redis: "redis{{ 's' if redis_use_ssl }}://{{ ws_redis_host }}:{{ ws_redis_port }}/{{ ws_redis_db }}"
 
 redis_extra_config_no_ssl: |
   syslog-enabled no
@@ -81,6 +84,9 @@ django_secret_key: "{{ vault_django_secret_key }}"     # vault
 django_superuser_name: "{{ vault_django_superuser_name }}"                                                 # vault
 django_superuser_pass: "{{ vault_django_superuser_pass }}"                                             # vault
 django_superuser_mail: "{{ vault_django_superuser_mail }}"                                          # vault
+django_smtp_host: "{{ vault_smtp_host }}"
+django_admins: "{{ vault_django_admins }}"
+www_path: "/var/www/{{ project_name }}"
 
 celery_broker: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
 worker_celery_broker: "amqp://{{ rabbitmq_worker_user }}:{{ rabbitmq_worker_password }}@{{ rabbitmq_server_name }}:{{ rabbitmq_server_port }}/{{ rabbitmq_application_vhost }}"
@@ -92,7 +98,7 @@ run_django_collectstatic: true
 
 default_lang: en
 
-use_lovelace_api: true
+use_lovelace_api: false
 lovelace_api_key: "{{ vault_lovelace_api_key }}"
 gateway_host: "{{ groups.gateway.0 }}"
 
@@ -103,8 +109,9 @@ content_import_list:
   responsible: "{{ django_superuser_name }}"
 
 # Nginx settings.
-nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
-nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
+nginx_use_letsencrypt: true
+# nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
+# nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
 
 # Monitoring
 monitored_nodes: "{{ groups.all }}"
@@ -114,6 +121,6 @@ grafana_admin_name: "{{ vault_grafana_admin_name }}"
 grafana_admin_pass: "{{ vault_grafana_admin_pass }}"
 grafana_admin_email: "{{ vault_grafana_admin_email }}"
 grafana_secret_key: "{{ vault_grafana_secret_key }}"
-django_use_prometheus: true
-prometheus_auth_pass: "{{ vault_prometheus_auth_pass }}"
-prometheus_server_ip: "{{ groups.monitor.0 }}"
+django_use_prometheus: false
+# prometheus_auth_pass: "{{ vault_prometheus_auth_pass }}"
+# prometheus_server_ip: "{{ groups.monitor.0 }}"

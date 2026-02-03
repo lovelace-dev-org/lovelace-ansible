@@ -5,7 +5,7 @@
     app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
+  environment: "{{ manage_environment }}"
   when: run_django_syncdb is defined and run_django_syncdb
   tags: django.syncdb,deploy
 
@@ -15,7 +15,7 @@
     app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
+  environment: "{{ manage_environment }}"
   when: run_django_db_migrations is defined and run_django_db_migrations
   tags: django.migrate,deploy
 
@@ -25,7 +25,7 @@
     app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
+  environment: "{{ manage_environment }}"
   when: run_django_collectstatic is defined and run_django_collectstatic
   notify: Restart application
   tags: django.collectstatic,deploy

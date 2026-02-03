@@ -3,6 +3,15 @@
 - name: Install packages required by the Django app inside virtualenv
   ansible.builtin.pip:
     virtualenv: "{{ virtualenv_path }}"
-    requirements: "{{ requirements_file }}"
     extra_args: "{{ pip_use_upgrade_flag | ternary('--upgrade', omit) }}"
+    name: "{{ project_path }}"
+
+- name: Write .env file
+  ansible.builtin.template: src=dotenv.j2
+            dest={{ base_path }}/.env
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0640
+            backup=yes
+  tags: deploy
 

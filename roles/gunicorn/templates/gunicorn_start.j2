@@ -18,12 +18,12 @@ echo "Starting $NAME as `whoami`"
 cd $DJANGODIR
 . {{ virtualenv_path }}/bin/activate
 
-# Set additional environment variables.
-. {{ virtualenv_path }}/bin/postactivate
-
 # Create the run directory if it doesn't exist.
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
+
+export DJANGO_SETTINGS_MODULE="{{ django_settings_file }}"
+export DOTENV_PATH="{{ dotenv_path }}"
 
 # Programs meant to be run under supervisor should not daemonize themselves
 # (do not use --daemon).

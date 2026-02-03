@@ -1,11 +1,5 @@
 ---
 
-- name: Install virtualenv
-  ansible.builtin.pip:
-    name: virtualenv
-    version: 20.24.6
-  tags: packages
-
 - name: Check if Supervisor exists
   ansible.builtin.stat: path=/etc/init.d/supervisor
   register: supervisor_status
@@ -24,7 +18,7 @@
   when: recreate_virtualenv
 
 - name: Create the virtualenv
-  ansible.builtin.command: virtualenv -p {{ virtualenv_python_version }} {{ virtualenv_path }}
+  ansible.builtin.command: python3 -m venv {{ virtualenv_path }}
            creates={{ virtualenv_path }}/bin/activate
 
 - name: Create the application log folder
