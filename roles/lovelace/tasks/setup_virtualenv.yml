@@ -24,9 +24,17 @@
 - name: Create the application log folder
   ansible.builtin.file:
     path: "{{ application_log_dir }}"
-    owner: "{{ gunicorn_user }}"
-    group: "{{ gunicorn_group }}"
+    owner: "{{ lovelace_user }}"
+    group: "{{ lovelace_group }}"
     mode: "0664"
     state: directory
   changed_when: false
 
+- name: Create scripts folder
+  ansible.builtin.file:
+    path: "{{ virtualenv_scripts_dir }}"
+    owner: "{{ lovelace_user }}"
+    group: "{{ lovelace_group }}"
+    mode: "0755"
+    state: directory
+  changed_when: false

@@ -9,3 +9,6 @@ worker_username: worker
 sandbox_username: peon
 restart_target: lovelace
 
+client_crt_path: /etc/ssl/client.crt
+client_key_path: /etc/ssl/client.key
+client_ca_path: /etc/ssl/ca.crt

@@ -1,0 +1,24 @@
+[supervisord]
+{% if use_syslog %}
+logfile = syslog
+{% else %}
+logfile_maxbytes = {{ daphne_log_size }}
+logfile_backups = {{ daphne_log_backups }}
+loglevel = {{ daphne_loglevel }}
+{% endif %}
+
+[fcgi-program:asgi]
+socket = tcp://localhost:{{ daphne_port }}
+
+directory = {{ project_path }}/webapp
+
+command = {{ virtualenv_path }}/scripts/start_daphne %(process_num)d
+numprocs = {{ daphne_processes }}
+
+process_name = asgi_%(process_num)d
+
+autostart = true
+autorestart = true
+
+stdout_logfile = {{ 'syslog' if use_syslog else daphne_log_file }}
+redirect_stderr = true

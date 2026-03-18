@@ -1,0 +1,28 @@
+---
+
+- name: Copy the SSL certificate to the remote server
+  ansible.builtin.copy:
+    content={{ client_ssl_crt }}
+    dest={{ client_crt_path }}
+    mode="0644"
+    owner={{ lovelace_user }}
+    group={{ lovelace_group }}
+  when: automated_peer_certs is undefined or automated_peer_certs is false
+
+- name: Copy the SSL key to the remote server
+  ansible.builtin.copy:
+    content={{ client_ssl_key }}
+    dest={{ client_key_path }}
+    mode="0600"
+    owner={{ lovelace_user }}
+    group={{ lovelace_group }}
+  when: automated_peer_certs is undefined or automated_peer_certs is false
+
+- name: Copy the SSL CA certificate to the remote server
+  ansible.builtin.copy:
+    content={{ client_ssl_ca }}
+    dest={{ client_ca_path }}
+    mode="0644"
+    owner={{ lovelace_user }}
+    group={{ lovelace_group }}
+  when: automated_peer_certs is undefined or automated_peer_certs is false

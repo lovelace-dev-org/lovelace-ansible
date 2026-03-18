@@ -18,6 +18,10 @@ rabbitmq:
 monitor:
   hosts:
     monitor.placehold.er:
+websockets:
+  hosts:
+    websockets.placehold.er:
+      daphne_processes: 1
 simpleprod:
   children:
     lovelace:

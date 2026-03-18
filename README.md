@@ -113,6 +113,131 @@ sudo -E env PATH=$PATH celery -A lovelace worker -Q default --loglevel=info -n c
 ```
 
 
+### Stand Alone Main Server Installation
+
+Requirements:
+- Ubuntu server
+
+This method will install a complete Lovelace installation into one server. This only installs the main server. If you want to run checkers, they need to be installed separately, or by running a full production installation (separate document).
+
+All the templates mentioned in this section are available in the templates folder of this repository.
+
+This installation will use certbot to get certificates. You will need to modify the process if you want to use your own certificates.
+
+#### Preparing the Server
+
+This guide assumes you are logging into the server with SSH key authentication, and have added the private key to your SSH agent. Your username that you log in with must have sudo access on the server as well.
+
+#### Preparing Inventory
+
+Copy the `inventory_simple.yml` template file into a suitable location. If you didn't clone this repository for developing it, you can put it in the root folder. Otherwise put it into a folder that is outside of the repository. For installing the main server only, you only need to replace `lovelace.placehold.er` with your server's address into the lovelace group. E.g.
+
+```
+lovelace:
+  hosts:
+    example.com:
+      gunicorn_num_workers: 2
+      gunicorn_max_requests: 0
+      gunicorn_timeout_seconds: 300
+```
+
+You should also adjust the `gunicorn_num_workers` parameter to a number suitable for your server (suggested default is 2 * (number of cores) + 1).
+
+#### Preparing Vault
+
+The configuration pulls a lot of variables from an additional variables file that shuold be encrypted using Ansible vault. Create a new vault with
+
+```
+ansible-vault create /path/to/vault
+```
+
+If you are not doing development, you can place the vault to `group_vars/simpleprod/vault.yml` and it should be automatically included. Otherwise place it outside your repository, and give its location to explicitly when running the playbook.
+
+Then paste the contents from the vault.yml template, and fill in the following fields:
+
+- `vault_db_password` - this will be your database user's password
+- `vault_django_secret_key` - django secret key that will be used to generate session keys etc.
+- `vault_django_superuser_name` - username for the initial django superuser
+- `vault_django_superuser_pass` - superuser password
+- `vault_django_superuser_email` - superuser email address
+- `vault_django_admins` - comma-separated string with at least one admin as "firstname lastname email"
+- `vault_smtp_host` - SMTP host address
+
+If you are going to use your own certificates, paste the certificate under `vault_nginx_ssl` and its private key under `vault_nginx_key`. To use them, you need to override the `nginx_use_letsencrypt` variable to false when running the playbook.
+
+#### Running the Playbook
+
+We are going to run the `simpleprod.yml` playbook. The example assumes both files were placed outside the repository.
+
+```
+ansible-playbook -i /path/to/inventory.yml -e @/path/to/vault -e server_user=username -J -K simpleprod.yml
+```
+
+In this example we are overriding the server_user variable with the username. You can override other variables as needed in the same way. This command will prompt for your vault password and your sudo password. If you also need to prompt for the SSH password, add the `-k` flag. For more complicated use cases, please refer to the [ansible-playbook script documentation][ansible-playbook_docs].
+
+After running the script, you should be able to see the Lovelace front page when pointing your browser at the server's address.
+
+
+### Websocket Backend Server Installation
+
+Requirements:
+- Ubuntu server
+
+This method will install the Lovelace server in websocket mode. These backend servers are used by interactive widgets that need to run student code and show the results. The process is largely similar to the standalone web server installation above.
+
+#### Preparing Inventory
+
+Copy the `inventory_simple.yml` template file into a suitable location. If you didn't clone this repository for developing it, you can put it in the root folder. Otherwise put it into a folder that is outside of the repository. For installing the websocket server, you only need to replace `websockets.placehold.er` with your server's address into the lovelace group. E.g.
+
+```
+websockets:
+  hosts:
+    example.com:
+      daphne_processes: 1
+```
+
+You can adjust `daphne_processes` but we've found quite solid success with just 1 in the past.
+
+#### Preparing Vault
+
+The configuration pulls a lot of variables from an additional variables file that shuold be encrypted using Ansible vault. Create a new vault with
+
+```
+ansible-vault create /path/to/vault
+```
+
+If you are not doing development, you can place the vault to `group_vars/simpleprod/vault.yml` and it should be automatically included. Otherwise place it outside your repository, and give its location to explicitly when running the playbook.
+
+Then paste the contents from the vault.yml template, and fill in the following fields:
+
+- `vault_django_secret_key` - django secret key that will be used to generate session keys etc.
+- `vault_ws_ticket_host` - address of the Redis server that stores websocket authencication tickets
+- `vault_client_crt` - certificate that's been signed with the same CA as the Redis server, for peer cert authentication
+- `vault_client_key` - key of the above cert
+- `vault_ca_crt` - CA certificate for peer authentication
+
+If you are going to use your own server certificates for NGINX, paste the certificate under `vault_nginx_ssl` and its private key under `vault_nginx_key`. To use them, you need to override the `nginx_use_letsencrypt` variable to false when running the playbook. Note these are different from the certificate used for peer authentication.
+
+
+#### Running the Playbook
+
+We are going to run the `ws_servers.yml` playbook. The example assumes both files were placed outside the repository.
+
+```
+ansible-playbook -i /path/to/inventory.yml -e @/path/to/vault -e server_user=username -e lovelace_main_host=lovelace.addre.ss -J -K ws_servers.yml
+```
+
+In this example we are overriding the server_user variable with the username. You can override other variables as needed in the same way. This command will prompt for your vault password and your sudo password. If you also need to prompt for the SSH password, add the `-k` flag. For more complicated use cases, please refer to the [ansible-playbook script documentation][ansible-playbook_docs].
+
+We are also setting the `lovelace_main_host` variable to point to the Lovelace server that you want to allow connections initiated by. You will not need this variable if you are installing both servers from the same inventory file, as its default value will be taken from the
+
+After running the script, your websocket
+
+
+
+
+
+
 ### Production Installation into Multiple Servers
 
 See the prodocution installation document for details.
@@ -146,6 +271,7 @@ When updating Lovelace, instead of running full provision, use the `deploy` tag.
 
 [django-ansible]: https://github.com/jcalazan/ansible-django-stack/
 [ansible-installation_guide]: https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+[ansible-playbook_docs]: https://docs.ansible.com/projects/ansible/devel/cli/ansible-playbook.html
 [vagrant-downloads]: https://www.vagrantup.com/downloads.html
 [virtual-box_downloads]: https://www.virtualbox.org/wiki/Downloads
 

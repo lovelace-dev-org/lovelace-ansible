@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd {{ project_path }}/webapp
+. {{ virtualenv_path }}/bin/activate
+
+export DJANGO_SETTINGS_MODULE=lovelace.settings.channels
+export DOTENV_PATH={{ base_path }}/.env
+
+RUNDIR={{ daphne_run_path }}
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+exec daphne \
+     -u /run/daphne/daphne_$1.sock \
+     --fd 0 \
+     --access-log - \
+     --proxy-headers \
+     lovelace.asgi:application

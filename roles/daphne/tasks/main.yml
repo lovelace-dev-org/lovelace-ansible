@@ -1,0 +1,25 @@
+---
+
+- name: Create Daphne socket directory
+  ansible.builtin.file:
+    path: "{{ daphne_run_path }}"
+    owner: "{{ daphne_user }}"
+    group: "{{ daphne_group }}"
+    mode: "0664"
+    state: directory
+  changed_when: false
+
+- name: Create Daphne start script
+  ansible.builtin.template: src=daphne_run.j2
+            dest={{ virtualenv_path }}/scripts/start_daphne
+            owner={{ daphne_user }}
+            group={{ daphne_group }}
+            mode=0755
+            backup=yes
+
+- name: Create Daphne Supervisor config file
+  ansible.builtin.template: src=daphne_supervisor_config.j2
+            dest=/etc/supervisor/conf.d/daphne.conf
+            backup=yes
+            mode="0644"
+  notify: Restart application

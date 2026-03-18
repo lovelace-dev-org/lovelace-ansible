@@ -10,3 +10,6 @@ nginx_htpasswd_path: /etc/nginx/passwdfile
 letsencrypt_dir: "/etc/letsencrypt/live/{{ inventory_hostname }}"
 letsencrypt_cert_filename: fullchain.pem
 letsencrypt_privkey_filename: privkey.pem
+
+is_gateway: false
+server_role: "lovelace-main"

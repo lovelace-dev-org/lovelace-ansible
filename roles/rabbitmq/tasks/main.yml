@@ -1,23 +1,18 @@
 ---
 
 - name: Add the RabbitMQ release signing key to the apt trusted keys
-  ansible.builtin.apt_key: url=https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
+  ansible.builtin.apt_key: url=https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA
            state=present
 
 - name: Add the RabbitMQ repository to the apt sources list
-  ansible.builtin.apt_repository: repo='deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu {{ ansible_distribution_release }} main'
+  ansible.builtin.apt_repository: repo='deb https://deb1.rabbitmq.com/rabbitmq-server/ubuntu/{{ ansible_facts["distribution_release"] }} {{ ansible_facts["distribution_release"] }} main'
                   update_cache={{ update_apt_cache }}
                   state=present
-
-- name: Add the RabbitMQ Erlang signing key to the apt trusted keys
-  ansible.builtin.apt_key: url=https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key
-           state=present
 
 - name: Add the RabbitMQ Erlang repository to the apt sources list
-  ansible.builtin.apt_repository: repo='deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/ubuntu {{ ansible_distribution_release }} main'
+  ansible.builtin.apt_repository: repo='deb https://deb1.rabbitmq.com/rabbitmq-erlang/ubuntu/{{ ansible_facts["distribution_release"] }} {{ ansible_facts["distribution_release"] }} main'
                   update_cache={{ update_apt_cache }}
                   state=present
-
 
 - name: Install RabbitMQ server
   ansible.builtin.apt:

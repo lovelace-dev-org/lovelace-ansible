@@ -1,0 +1,27 @@
+---
+
+- name: Provision websocket server(s)
+  hosts: websockets
+  become: true
+  become_user: root
+  remote_user: "{{ server_user }}"
+  vars:
+    update_apt_cache: true
+    ssl_key_usage: ["clientAuth"]
+    ssl_user: "{{ application_name }}"
+    server_role: "lovelace-websockets"
+  module_defaults:
+    ansible.builtin.apt:
+      force_apt_get: true
+
+  roles:
+    - base
+#    - ca_signed
+#    - logclient
+    - supervisor
+    - lovelace
+    - daphne
+#    - gunicorn
+    - certbot
+    - nginx
+    - runner

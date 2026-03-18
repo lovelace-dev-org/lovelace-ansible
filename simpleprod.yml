@@ -9,6 +9,7 @@
   remote_user: "{{ server_user }}"
   vars:
     update_apt_cache: true
+    server_role: "lovelace-main"
   module_defaults:
     ansible.builtin.apt:
       force_apt_get: true
@@ -18,6 +19,7 @@
 #    - logclient
     - geerlingguy.redis
     - db
+    - supervisor
     - lovelace
     - gunicorn
     - nginx

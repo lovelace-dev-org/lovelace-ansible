@@ -1,10 +1,16 @@
-upstream {{ application_name }}_wsgi_server {
-  # fail_timeout=0 means we always retry an upstream even if it failed
-  # to return a good HTTP response (in case the Unicorn master nukes a
-  # single worker for timing out).
+{% if server_role == "lovelace-websockets" %}
+  upstream channels-backend {
+      server localhost:{{ daphne_port }};
+  }
+{% else %}
+  upstream {{ application_name }}_wsgi_server {
+    # fail_timeout=0 means we always retry an upstream even if it failed
+    # to return a good HTTP response (in case the Unicorn master nukes a
+    # single worker for timing out).
 
-  server unix:{{ virtualenv_path }}/run/gunicorn.sock fail_timeout=0;
-}
+    server unix:{{ virtualenv_path }}/run/gunicorn.sock fail_timeout=0;
+  }
+{% endif %}
 
 server {
     listen      80;
@@ -52,7 +58,7 @@ server {
     # Enable XSS Protection in case user's browser has disabled it
     add_header X-XSS-Protection "1; mode=block";
 
-    {% if "gateway" in groups and not is_gateway %}
+    {% if "gateway" in groups and server_role == "lovelace-main" %}
       # Enable forwards from gateway
       add_header Access-Control-Allow-Origin "{{ gateway_host }}";
     {% endif %}
@@ -133,6 +139,12 @@ server {
             return 503;
         }
 
+        {% if server_role == "lovelace-websockets" %}
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+        {% endif %}
+
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto https;
         proxy_set_header X-Real-IP $remote_addr;
@@ -142,7 +154,11 @@ server {
         # Try to serve static files from nginx, no point in making an
         # *application* server like Unicorn/Rainbows! serve static files.
         if (!-f $request_filename) {
-            proxy_pass http://{{ application_name }}_wsgi_server;
+            {% if server_role == "lovelace-websockets" %}
+              proxy_pass http://channels-backend;
+            {% else %}
+              proxy_pass http://{{ application_name }}_wsgi_server;
+            {% endif %}
             break;
         }
     }

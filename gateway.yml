@@ -7,6 +7,7 @@
     git_repo: https://github.com/lovelace-dev-org/lovelace-gateway
     git_branch: main
     is_gateway: true
+    server_role: "lovelace-gateway"
     django_settings_file: gateway.settings
     application_name: gateway
   module_defaults:

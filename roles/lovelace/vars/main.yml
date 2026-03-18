@@ -2,23 +2,29 @@
 virtualenv_python_version: "{{ base_python_package }}"
 base_path: "/opt/{{ application_name }}"
 virtualenv_path: "/opt/{{ application_name }}/venv"
+lovelace_private_storage: "{{ base_path }}/upload"
+nginx_static_dir: "{{ www_path }}/static/"
+nginx_media_dir: "{{ www_path }}/media/"
 
 # Application settings.
 project_path: "{{ base_path }}/{{ project_name }}"
 application_log_dir: "{{ base_path }}/logs"
+application_log_file: "{{ application_log_dir}}/lovelace.log"
+virtualenv_scripts_dir: "{{ virtualenv_path}}/scripts"
+dotenv_path: "{{ base_path}}/.env"
 
 gunicorn_user: "{{ application_name }}"
 
+# TODO: create this list by looping through groups['lovelace']
 lovelace_main_host: "{{ inventory_hostname }}"
 lovelace_main_addr: 127.0.0.1
 
+manage_environment:
+  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
+  DOTENV_PATH: "{{ dotenv_path }}"
 
 # Django environment variables.
 lovelace_environment:
-  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
-  DJANGO_SUPERUSER_USERNAME: "{{ django_superuser_name }}"
-  DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_pass }}"
-  DJANGO_SUPERUSER_EMAIL: "{{ django_superuser_mail }}"
   LOVELACE_HOSTNAME: "{{ lovelace_main_host }}"
   LOVELACE_HOSTADDR: "{{ lovelace_main_addr }}"
   LOVELACE_DEFAULT_LANG: "{{ default_lang }}"
@@ -37,16 +43,16 @@ lovelace_environment:
   LOVELACE_DB_PORT: "{{ db_port }}"
   LOVELACE_CHECKER_ENV: ' {"PATH": "{{ checking_env_path }}/bin","VIRTUALENV": "{{ checking_env_path }}","LC_CTYPE": "en_US.UTF-8"} '
   LOVELACE_EMAIL_HOST: "{{ django_smtp_host }}"
-  LOVELACE_CELERY_USE_SSL: "{{ '1' if rabbitmq_use_ssl else '' }}"
-  LOVELACE_CACHE_USE_SSL: "{{ '1' if redis_use_ssl else '' }}"
+  LOVELACE_CELERY_USE_SSL: "{{ '1' if result_redis_ssl else '' }}"
+  LOVELACE_CACHE_USE_SSL: "{{ '1' if cache_redis_ssl else '' }}"
   LOVELACE_DB_USE_SSL: "{{ '1' if postgres_use_ssl else '' }}"
   LOVELACE_CLIENT_CA: "{{ ca_crt_path | default('') }}"
   LOVELACE_CLIENT_CERT: "{{ ssl_crt_path | default('') }}"
   LOVELACE_CLIENT_KEY: "{{ ssl_key_path | default('') }}"
-  LOVELACE_WS_CACHE_USE_SSL: "{{ '1' if redis_use_ssl else '' }}"
-  LOVELACE_WS_CLIENT_CA: "{{ ca_crt_path | default('') }}"
-  LOVELACE_WS_CLIENT_CERT: "{{ ssl_crt_path | default('') }}"
-  LOVELACE_WS_CLIENT_KEY: "{{ ssl_key_path | default('') }}"
+  LOVELACE_WS_CACHE_USE_SSL: "{{ '1' if ws_redis_ssl else '' }}"
+  LOVELACE_WS_CLIENT_CA: "{{ client_ca_path | default('') }}"
+  LOVELACE_WS_CLIENT_CERT: "{{ client_crt_path | default('') }}"
+  LOVELACE_WS_CLIENT_KEY: "{{ client_key_path | default('') }}"
   LOVELACE_WS_ORIGINS: "{{ lovelace_main_host }}"
   ENABLE_MANAGEMENT_API: "{{ '1' if use_lovelace_api else '' }}"
   LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"

@@ -13,8 +13,10 @@ application_name: lovelace
 enable_deadsnakes_ppa: false
 virtualenv_python_version: python3.12
 
-
 use_syslog: false
+
+lovelace_user: lovelace
+lovelace_group: webapps
 
 # Git settings.
 setup_git_repo: true
@@ -30,6 +32,12 @@ db_name: "{{ application_name }}"
 db_password: "{{ vault_db_password }}"
 db_host: localhost
 db_port: 5432
+
+# Client certificate for peer verification
+client_ssl_crt: "{{ vault_client_crt }}"
+client_ssl_key: "{{ vault_client_key }}"
+client_ssl_ca: "{{ vault_ca_crt }}"
+
 
 # RabbitMQ settings, this deployment defaults to rabbit being in private network
 rabbitmq_use_ssl: false
@@ -47,22 +55,27 @@ rabbitmq_worker_user: "{{ application_name }}-worker"
 rabbitmq_worker_password: "{{ vault_rabbitmq_worker_password }}"
 
 # Redis settigns for cache and result backend
-redis_use_ssl: false
+result_redis_ssl: false
 result_redis_host: localhost                # read from inventory
 result_redis_port: 6379                     # read from
 # redis_bind_interface: "{{ inventory_hostname }}"
 result_redis_db: 1
+
+cache_redis_ssl: false
 cache_redis_host: localhost
 cache_redis_port: 6379
 cache_redis_db: 0
 
-ws_redis_host: localhost
-ws_redis_port: 6379
-ws_redis_db: 2
+ws_redis_ssl: true
+ws_redis_host: "{{ vault_ws_ticket_host }}"
+ws_redis_port: "{{ vault_ws_ticket_port | default(6379) }}"
+ws_redis_db: "{{ vault_ws_ticket_db | default(0) }}"
 
-cache_redis: "redis{{ 's' if redis_use_ssl }}://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
-result_redis: "redis{{ 's' if redis_use_ssl }}://{{ result_redis_host }}:{{ result_redis_port }}/{{ result_redis_db }}"
-ws_redis: "redis{{ 's' if redis_use_ssl }}://{{ ws_redis_host }}:{{ ws_redis_port }}/{{ ws_redis_db }}"
+cache_redis: "redis{{ 's' if cache_redis_ssl }}://{{ cache_redis_host }}:{{ cache_redis_port }}/{{ cache_redis_db }}"       # read from inventory + host variable
+result_redis: "redis{{ 's' if result_redis_ssl }}://{{ result_redis_host }}:{{ result_redis_port }}/{{ result_redis_db }}"
+ws_redis: "redis{{ 's' if ws_redis_ssl }}://{{ ws_redis_host }}:{{ ws_redis_port }}/{{ ws_redis_db }}"
+
+redis_use_ssl: "{{ result_redis_ssl }}"
 
 redis_extra_config_no_ssl: |
   syslog-enabled no
@@ -79,7 +92,7 @@ redis_port: "{{ 0 if redis_use_ssl else redis_self_port }}"
 redis_extra_config: "{{ redis_extra_config_ssl if redis_use_ssl is true else redis_extra_config_no_ssl }}"
 
 # Application settings.
-django_settings_file: "{{ application_name }}.settings.production"
+django_settings_file: "{{ application_name }}.settings.{{ channels if server_role == 'lovelace-websockets' else production }}"
 django_secret_key: "{{ vault_django_secret_key }}"     # vault
 django_superuser_name: "{{ vault_django_superuser_name }}"                                                 # vault
 django_superuser_pass: "{{ vault_django_superuser_pass }}"                                             # vault
@@ -108,10 +121,22 @@ content_import_list:
   group: DefaultGroup
   responsible: "{{ django_superuser_name }}"
 
+runner_docker_images:
+- repository: https://github.com/lovelace-dev-org/lovelace-python-runner
+  reponame: pyrunner
+  dockerfile: runner.docker
+  imagename: python-runner
+- repository: https://github.com/lovelace-dev-org/lovelace-python-runner
+  reponame: pyrunner
+  dockerfile: turtle.docker
+  imagename: turtle-runner
+
+
 # Nginx settings.
 nginx_use_letsencrypt: true
-# nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
-# nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
+nginx_ssl_crt: "{{ vault_nginx_ssl_crt }}"
+nginx_ssl_key: "{{ vault_nginx_ssl_key }}"
+certbot_admin_email: "{{ vault_django_superuser_mail }}"
 
 # Monitoring
 monitored_nodes: "{{ groups.all }}"

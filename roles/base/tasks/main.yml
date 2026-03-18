@@ -9,7 +9,7 @@
   become: yes
 
 - name: Install security updates
-  ansible.builtin.apt: default_release={{ ansible_distribution_release }}-security
+  ansible.builtin.apt: default_release={{ ansible_facts["distribution_release"] }}-security
        update_cache={{ update_apt_cache }}
        upgrade=dist
   tags:

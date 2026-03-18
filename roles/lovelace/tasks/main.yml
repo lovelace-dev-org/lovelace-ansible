@@ -8,6 +8,8 @@
 - ansible.builtin.import_tasks: set_file_permissions.yml
   tags: deploy
 
+- ansible.builtin.import_tasks: setup_logfile.yml
+
 - ansible.builtin.import_tasks: setup_virtualenv.yml
   tags: virtualenv
 
@@ -16,6 +18,8 @@
 
 - ansible.builtin.import_tasks: setup_django_app.yml
   tags: deploy
+
+- ansible.builtin.import_tasks: setup_client_certs.yml
 
 - ansible.builtin.import_tasks: create_django_superuser.yml
 

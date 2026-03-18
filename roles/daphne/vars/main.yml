@@ -1,0 +1,5 @@
+---
+
+daphne_user: "{{ lovelace_user }}"
+daphne_group: "{{ lovelace_group }}"
+daphne_log_file: "{{ application_log_dir }}/daphne.log"

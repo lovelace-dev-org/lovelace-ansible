@@ -12,7 +12,16 @@ vault_grafana_admin_name:
 vault_grafana_admin_pass:
 vault_grafana_secret_key:
 vault_prometheus_auth_pass:
+vault_ws_ticket_host:
+vault_ws_ticket_port:
+vault_ws_ticket_db:
 
-vault_nginx_ssl: |
+vault_nginx_crt: |
 
 vault_nginx_key: |
+
+vault_client_crt: |
+
+vault_client_key: |
+
+vault_ca_crt: |

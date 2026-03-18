@@ -1,0 +1,11 @@
+---
+
+- name: Ensure the Supervisor service is running
+  ansible.builtin.service:
+    name: supervisor
+    state: started
+    enabled: true
+    # TODO: This is likely due to a bug in Ansible.
+    # Remove this line in the future.
+    # See https://github.com/ansible/ansible/issues/75005
+    use: sysvinit

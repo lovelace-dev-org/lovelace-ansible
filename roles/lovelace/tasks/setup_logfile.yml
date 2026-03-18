@@ -1,0 +1,31 @@
+---
+
+- name: Create the application log folder
+  ansible.builtin.file:
+    path: "{{ application_log_dir }}"
+    owner: "{{ lovelace_user }}"
+    group: "{{ lovelace_group }}"
+    mode: "0664"
+    state: directory
+  changed_when: false
+
+- name: Check for an existing application logfile
+  ansible.builtin.stat:
+    path: "{{ application_log_file }}"
+  register: p
+
+- name: Create (or retain) the application log file
+  # Removing until https://github.com/ansible/ansible/issues/45530 gets resolved.
+  # ansible.builtin.copy: content=""
+  #       dest={{ application_log_file }}
+  #       owner={{ gunicorn_user }}
+  #       group={{ gunicorn_group }}
+  #       mode=0664
+  #       force=no
+  ansible.builtin.file:
+    path: "{{ application_log_file }}"
+    owner: "{{ lovelace_user }}"
+    group: "{{ lovelace_group }}"
+    mode: 0664
+    state: '{{ "file" if p.stat.exists else "touch" }}'
+

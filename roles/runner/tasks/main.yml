@@ -1,0 +1,24 @@
+---
+
+- name: Install Docker
+  ansible.builtin.apt:
+    state: present
+    name:
+      - docker-buildx
+  tags:
+    - packages
+
+- name: Clone runner git repositories
+  ansible.builtin.git:
+    repo: "{{ item.repository }}"
+    version: "{{ item.git_branch | default('main') }}"
+    dest: "/tmp/{{ item.reponame }}"
+    accept_hostkey: true
+  loop: "{{ runner_docker_images }}"
+
+- name: Build docker images
+  community.docker.docker_image_build:
+    path: "/tmp/{{ item.reponame }}"
+    dockerfile: "{{ item.dockerfile }}"
+    name: "{{ item.imagename }}"
+  loop: "{{ runner_docker_images }}"

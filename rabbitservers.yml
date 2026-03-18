@@ -14,7 +14,7 @@
       force_apt_get: true
 
   roles:
-    - base
-    - ca_signed
-    - logclient
+#    - base
+#    - ca_signed
+#    - logclient
     - rabbitmq

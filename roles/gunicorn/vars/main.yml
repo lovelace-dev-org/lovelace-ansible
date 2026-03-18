@@ -1,5 +1,8 @@
 ---
-application_log_file: "{{ application_log_dir }}/gunicorn_supervisor.log"
+gunicorn_user: "{{ lovelace_user }}"
+gunicorn_group: "{{ lovelace_group }}"
+
+gunicorn_log_file: "{{ application_log_dir }}/gunicorn.log"
 
 lovelace_private_storage: "{{ base_path }}/upload"
 lovelace_pg_passfile: "{{ base_path }}/.lovelace_pgpass"
@@ -9,9 +12,3 @@ nginx_static_dir: "{{ www_path }}/static/"
 nginx_media_dir: "{{ www_path }}/media/"
 
 restart_target: "{{ application_name }}"
-dotenv_path: "{{ base_path}}/.env"
-
-manage_environment:
-  DJANGO_SETTINGS_MODULE: "{{ django_settings_file }}"
-  DOTENV_PATH: "{{ dotenv_path }}"
-

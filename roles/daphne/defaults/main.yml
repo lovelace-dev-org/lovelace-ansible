@@ -1,0 +1,9 @@
+---
+
+daphne_run_path: "/run/daphne"
+daphne_processes: 1
+daphne_port: 8000
+daphne_log_size: 52428800     # 50 MB
+daphne_log_backups: 4
+daphne_loglevel: warn
+restart_target: "asgi:"
