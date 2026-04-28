@@ -20,7 +20,7 @@ lovelace_group: webapps
 
 # Git settings.
 setup_git_repo: true
-git_branch: ansible-deploy
+git_branch: deploy-mirror
 
 ca_passphrase: "{{ vault_ca_passphrase }}"
 
@@ -28,9 +28,9 @@ ca_passphrase: "{{ vault_ca_passphrase }}"
 remote_db: false
 postgres_use_ssl: false
 db_user: "{{ application_name }}"
-db_name: "{{ application_name }}"
+db_name: "{{ vault_remote_db_name | default(application_name) }}"
 db_password: "{{ vault_db_password }}"
-db_host: localhost
+db_host: "{{ vault_remote_db_host | default('localhost') }}"
 db_port: 5432
 
 # Client certificate for peer verification
@@ -87,12 +87,12 @@ redis_extra_config_ssl: |
   tls-key-file {{ ssl_key_path }}
   tls-ca-cert-file {{ ca_crt_path }}
 
-redis_self_port: "{{ hostvars[inventory_hostname].port | default(6379) }}"
+redis_self_port: 6379
 redis_port: "{{ 0 if redis_use_ssl else redis_self_port }}"
 redis_extra_config: "{{ redis_extra_config_ssl if redis_use_ssl is true else redis_extra_config_no_ssl }}"
 
 # Application settings.
-django_settings_file: "{{ application_name }}.settings.{{ channels if server_role == 'lovelace-websockets' else production }}"
+django_settings_file: "{{ application_name }}.settings.{{ channels if server_role == 'lovelace-websockets' else 'production' }}"
 django_secret_key: "{{ vault_django_secret_key }}"     # vault
 django_superuser_name: "{{ vault_django_superuser_name }}"                                                 # vault
 django_superuser_pass: "{{ vault_django_superuser_pass }}"                                             # vault
