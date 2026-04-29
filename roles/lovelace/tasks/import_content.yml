@@ -25,7 +25,7 @@
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
   when: import_dir.path is defined
-  environment: "{{ django_environment }}"
+  environment: "{{ manage_environment }}"
   with_items: "{{ content_import_list }}"
 
 - name: Create initial revisions
@@ -34,7 +34,7 @@
     app_path: "{{ project_path }}/webapp"
     virtualenv: "{{ virtualenv_path }}"
     settings: "{{ django_settings_file }}"
-  environment: "{{ django_environment }}"
+  environment: "{{ manage_environment }}"
 
 - name: Clear the temporary folder
   become_user: "{{ gunicorn_user }}"
