@@ -2,9 +2,6 @@
 
 server_root_dir: /opt
 
-virtualenv_path: "/opt/{{ application_name }}"
-project_path: "{{ virtualenv_path }}/{{ project_name }}"
-
 celery_user: "{{ application_name }}"
 celery_group: webapps
 

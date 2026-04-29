@@ -26,7 +26,7 @@
       - acl
       - htop
       - git
-      - "{{ base_python_package }}-pip"
+      - "{{ base_python_package }}-venv"
       - "i{{ base_python_package }}"
       - supervisor
   tags:
