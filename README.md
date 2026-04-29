@@ -75,27 +75,24 @@ This installation method installs all the requirements and runs them, but does n
 or the Celery workers. Running them manually gives more direct access to debug information. If you want to run
 them automatically with Supervisor, you can remove the `run_manually` variable from `local.yml` (or set it to false).
 
-Be aware that this creates a lot of changes on your local computer. Therefore creating a separate virtual machine for development is recommended. The user executing the command must be in sudoers.
+Be aware that this creates a lot of changes on your local computer. Therefore creating a separate virtual machine for development is recommended. The user executing the command must be in sudoers. If your user is not allowed to do passwordless sudo, add the -K flag to the command.
 
 ```
-sudo ansible-playbook -i hosts.yml local.yml
+ansible-playbook -i hosts.yml local.yml
 ```
 
-If you are using a virtualenv for Ansible, you need to pass its environment variables to sudo:
+This installation creates two virtual envs `/opt/lovelace/` and `/checkers/python/`, and clones the Lovelace repository into `/opt/lovelace/lovelace/`. Ownership of the repository is transferred from the lovelace user to the user running the playbook to prevent ownership issues when using git.
+
+If you want to install to another location, override the value of the `base_path` variable in the playbook command e.g.
 
 ```
-sudo -E env PATH=$PATH ansible-playbook -i hosts.yml local.yml
+ansible-playbook -i hosts.yml -e base_path=/opt/alternative local.yml
 ```
-
-This installation creates two virtual envs `/opt/lovelace/` and `/checkers/python/`, and clones the Lovelace
-repository into `/opt/lovelace/lovelace/`. Ownership of the repository is transferred from the lovelace user
-to the user running the playbook to prevent ownership issues when using git.
 
 In order to be able to run Lovelace from the command line manually, you need to activate the virtualenv, and export the environment variables that are needed for configuration.
 
 ```
 source /opt/lovelace/bin/activate
-source /opt/lovelace/bin/postactivate
 ```
 
 After this you can use Django's manage
@@ -111,6 +108,14 @@ and manually start workers with Celery (need to run as root for demotion to work
 cd /opt/lovelace/lovelace/webapp
 sudo -E env PATH=$PATH celery -A lovelace worker -Q default --loglevel=info -n checker1@%h
 ```
+
+If you want to run a websocket server instead of the main Lovelace site, change the settings file in your environment before running the server
+
+```
+export DJANGO_SETTINGS_MODULE=lovelace.settings.channels
+python manage.py runserver
+```
+
 
 
 ### Stand Alone Main Server Installation
