@@ -128,7 +128,7 @@
     gather_subset: default_ipv4
   delegate_to: "{{ item }}"
   delegate_facts: true
-  loop: "{{ groups['lovelace'] }}"
+  loop: "{{ groups['lovelace']|default([]) }}"
   when: remote_db is true
 
 - name: Allow access from Lovelace server

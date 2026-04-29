@@ -1,7 +1,7 @@
 ---
 virtualenv_python_version: "{{ base_python_package }}"
 base_path: "/opt/{{ application_name }}"
-virtualenv_path: "/opt/{{ application_name }}/venv"
+virtualenv_path: "{{ base_path }}/venv"
 lovelace_private_storage: "{{ base_path }}/upload"
 nginx_static_dir: "{{ www_path }}/static/"
 nginx_media_dir: "{{ www_path }}/media/"
@@ -42,7 +42,7 @@ lovelace_environment:
   LOVELACE_DB_HOST: "{{ db_host }}"
   LOVELACE_DB_PORT: "{{ db_port }}"
   LOVELACE_CHECKER_ENV: ' {"PATH": "{{ checking_env_path }}/bin","VIRTUALENV": "{{ checking_env_path }}","LC_CTYPE": "en_US.UTF-8"} '
-  LOVELACE_EMAIL_HOST: "{{ django_smtp_host }}"
+  LOVELACE_EMAIL_HOST: "{{ django_smtp_host | default('') }}"
   LOVELACE_CELERY_USE_SSL: "{{ '1' if result_redis_ssl else '' }}"
   LOVELACE_CACHE_USE_SSL: "{{ '1' if cache_redis_ssl else '' }}"
   LOVELACE_DB_USE_SSL: "{{ '1' if postgres_use_ssl else '' }}"
@@ -57,4 +57,4 @@ lovelace_environment:
   ENABLE_MANAGEMENT_API: "{{ '1' if use_lovelace_api else '' }}"
   LOVELACE_MANAGEMENT_API_KEY: "{{ lovelace_api_key | default('') }}"
   LOVELACE_PROMETHEUS_EXPORT: "{{ '1' if django_use_prometheus else '' }}"
-  LOVELACE_ADMINS: "{{ django_admins }}"
+  LOVELACE_ADMINS: "{{ django_admins | default('') }}"

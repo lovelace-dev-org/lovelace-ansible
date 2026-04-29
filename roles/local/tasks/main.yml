@@ -1,7 +1,7 @@
 ---
 
 - name: Add the controller user to the application group
-  ansible.builtin.user: name={{ lookup('ansible.builtin.env', 'SUDO_USER') }} group={{ gunicorn_group }} state=present
+  ansible.builtin.user: name={{ lookup('ansible.builtin.env', 'USER') }} group={{ gunicorn_group }} state=present
   tags: localdev
 
 - name: Add write privilege to group
@@ -14,7 +14,7 @@
 - name: Change ownership of the repository to controller user
   ansible.builtin.file: path={{ project_path }}
         recurse=yes
-        owner={{ lookup('ansible.builtin.env', 'SUDO_USER') }}
+        owner={{ lookup('ansible.builtin.env', 'USER') }}
         group={{ gunicorn_group }}
   changed_when: false
   tags: localdev
@@ -42,3 +42,15 @@
         state=directory
   changed_when: false
   tags: localdev
+
+- name: Add dev settings export to activate file
+  ansible.builtin.lineinfile:
+    path: "{{ virtualenv_path }}/bin/activate"
+    line: "export DJANGO_SETTINGS_MODULE=lovelace.settings.dev"
+
+- name: Add dotenv path export to activate file
+  ansible.builtin.lineinfile:
+    path: "{{ virtualenv_path }}/bin/activate"
+    line: "export DOTENV_PATH={{ base_path }}/.env"
+
+
