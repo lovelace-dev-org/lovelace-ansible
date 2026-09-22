@@ -22,8 +22,8 @@
     - supervisor
     - lovelace
     - gunicorn
-    - nginx
     - certbot
+    - nginx
 #    - node_exporter
 
 # - ansible.builtin.import_playbook: gateway.yml

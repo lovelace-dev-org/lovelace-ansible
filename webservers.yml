@@ -15,8 +15,10 @@
 
   roles:
     - base
-    - ca_signed
-    - logclient
+    # - ca_signed
+    # - logclient
+    - supervisor
     - lovelace
+    - certbot
     - gunicorn
     - nginx
