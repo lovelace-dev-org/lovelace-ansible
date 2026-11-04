@@ -1,11 +1,11 @@
 ---
 
 - name: Add the PostgreSQL repository key to the apt trusted keys
-  ansible.builtin.apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+  ansible.builtin.deb822_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
            state=present
 
 - name: Add the PostgreSQL repository to the apt sources list
-  ansible.builtin.apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_facts["distribution_release"] }}-pgdg main'
+  ansible.builtin.deb822_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_facts["distribution_release"] }}-pgdg main'
                   update_cache={{ update_apt_cache }}
                   state=present
 
@@ -83,7 +83,7 @@
 - name: Set server certificate path
   become: true
   become_user: postgres
-  community.postgresql.postgresql_set:
+  community.postgresql.postgresql_alter_system:
     name: ssl_cert_file
     value: "{{ ssl_crt_path }}"
   when: postgres_use_ssl is true
@@ -91,7 +91,7 @@
 - name: Set server key path
   become: true
   become_user: postgres
-  community.postgresql.postgresql_set:
+  community.postgresql.postgresql_alter_system:
     name: ssl_key_file
     value: "{{ ssl_key_path }}"
   when: postgres_use_ssl is true
@@ -99,7 +99,7 @@
 - name: Set CA path
   become: true
   become_user: postgres
-  community.postgresql.postgresql_set:
+  community.postgresql.postgresql_alter_system:
     name: ssl_ca_file
     value: "{{ ca_crt_path }}"
   when: postgres_use_ssl is true
@@ -107,7 +107,7 @@
 - name: Add server hostname to listen addresses
   become: true
   become_user: postgres
-  community.postgresql.postgresql_set:
+  community.postgresql.postgresql_alter_system:
     db: "{{ db_name }}"
     name: listen_addresses
     value: "127.0.0.1, {{ inventory_hostname }}"
