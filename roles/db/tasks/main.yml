@@ -1,13 +1,13 @@
 ---
 
-- name: Add the PostgreSQL repository key to the apt trusted keys
-  ansible.builtin.deb822_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
-           state=present
-
 - name: Add the PostgreSQL repository to the apt sources list
-  ansible.builtin.deb822_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_facts["distribution_release"] }}-pgdg main'
-                  update_cache={{ update_apt_cache }}
-                  state=present
+  deb822_repository:
+    name: postgresql
+    types: deb
+    uris: http://apt.postgresql.org/pub/repos/apt/
+    suites: '{{ ansible_facts["distribution_release"] }}-pgdg'
+    components: main
+    signed_by: https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
 - name: Ensure locale is available
   community.general.locale_gen: name=en_US.UTF-8
@@ -46,7 +46,7 @@
 - name: Ensure user has access to the database
   become: true
   become_user: postgres
-  community.postgresql.postgresql_user: db={{ db_name }}
+  community.postgresql.postgresql_user: login_db={{ db_name }}
                    name={{ db_user }}
                    password={{ db_password }}
                    encrypted=yes
@@ -58,7 +58,7 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_privs:
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"
     privs: ALL
     type: database
     role: "{{ db_user }}"
@@ -67,7 +67,7 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_privs:
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"
     privs: ALL
     type: schema
     objs: public
@@ -108,7 +108,7 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_alter_system:
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"
     name: listen_addresses
     value: "127.0.0.1, {{ inventory_hostname }}"
   notify: Restart postgresql
@@ -118,7 +118,7 @@
   become: true
   become_user: postgres
   community.postgresql.postgresql_query:
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"
     query: "show hba_file;"
   register: hba_query_result
   when: remote_db is true
